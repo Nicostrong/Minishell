@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:46:06 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/23 10:54:21 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/08/23 11:14:19 by nfordoxc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ unset (no option)
 env (no option)
 exit (no option)
 */
+
+// J AJOUTE CETTE LIGNE
 
 int			ft_exit(t_data *data);
 
