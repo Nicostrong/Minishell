@@ -1,0 +1,1014 @@
+Explications des fonctions autorisees pour le projet Minishell
+
+1)	readline:
+
+	La fonction readline lit une ligne de texte depuis l'entrée standard et la 
+	retourne sous forme de chaîne de caractères.
+
+	Lecture de la ligne :
+		Elle lit une ligne entière jusqu'à ce que l'utilisateur appuie sur 
+		"Entrée".
+	Historique :
+		Si configuré, chaque ligne lue peut être ajoutée à un historique des 
+		commandes, ce qui permet à l'utilisateur de rappeler les commandes 
+		précédentes en utilisant les flèches du clavier.
+	Édition de ligne :
+		Elle permet à l'utilisateur de modifier la ligne en cours d'édition, par
+		exemple en utilisant les touches de direction pour déplacer le curseur 
+		ou en utilisant des combinaisons de touches pour couper/copier/coller du
+		texte.
+
+	Lib a inclure :
+		#include <readline/readline.h>
+		#include <readline/history.h>
+	
+	option de compilation:
+		-lreadline
+
+2)	rl_clear_history:
+
+	La fonction rl_clear_history supprime toutes les entrées de l'historique, 
+	c'est-à-dire qu'elle vide la liste des commandes que l'utilisateur a saisies 
+	précédemment et qui ont été enregistrées grâce à la fonction add_history.
+	Après avoir appelé cette fonction, l'historique est vide, et toutes les 
+	commandes précédentes sont perdues.
+
+	Lib a inclure :
+		#include <readline/readline.h>
+		#include <readline/history.h>
+	
+	option de compilation:
+		-lreadline
+3)	rl_on_new_line:
+
+	La fonction rl_on_new_line prépare l'interface de ligne de commande à 
+	accepter une nouvelle ligne d'entrée. Concrètement, cette fonction met à 
+	jour l'état interne de Readline pour qu'il reflète le fait que le curseur 
+	est maintenant sur une nouvelle ligne. Cela est particulièrement utile dans 
+	des cas où le programme a besoin de redessiner ou de rafraîchir la ligne de 
+	commande après avoir fait quelque chose qui modifie l'affichage du terminal,
+	comme l'impression d'un message ou le passage à une nouvelle ligne.
+
+	Cette fonction est typiquement utilisée dans des scénarios où l'affichage de
+	la ligne de commande est perturbé, et que vous voulez vous assurer que la 
+	ligne suivante est correctement alignée et que l'utilisateur peut continuer 
+	à entrer des commandes sans problèmes visuels.
+
+	//!\\ a utiliser apres un ctrl+c //!\\
+
+4)	rl_replace_line:
+
+	La fonction rl_replace_line remplace le texte de la ligne courante (celle 
+	sur laquelle l'utilisateur est en train de travailler) par un autre texte 
+	fourni en argument. Vous pouvez l'utiliser pour effacer la ligne courante ou
+	pour la remplacer par une nouvelle chaîne de caractères. Après avoir utilisé 
+	ette fonction, vous devrez généralement rafraîchir l'affichage pour que le 
+	changement soit visible à l'utilisateur.
+
+	Prototype :
+		void	rl_replace_line(const char *text, int clear_undo);
+	
+		text :
+			La chaîne de caractères qui remplacera la ligne courante.
+		clear_undo :
+			Un entier indiquant s'il faut ou non effacer l'historique des 
+			actions de l'utilisateur concernant la ligne courante (utilisé pour 
+			l'annulation des modifications, "undo"). Si clear_undo est non nul 
+			(par exemple, 1), l'historique d'annulation est effacé.
+
+5)	rl_redisplay:
+
+	La fonction rl_redisplay fait partie de la bibliothèque GNU Readline et est 
+	utilisée pour rafraîchir l'affichage de la ligne de commande en cours. Cela 
+	signifie que la fonction redessine la ligne de commande actuelle dans le 
+	terminal, en tenant compte des modifications qui ont pu être effectuées sur 
+	la ligne par le programme ou par l'utilisateur.
+	rl_redisplay est souvent utilisée après avoir modifié le contenu de la ligne
+	courante avec des fonctions comme rl_replace_line, rl_delete_text, ou 
+	d'autres opérations qui affectent l'affichage de la ligne de commande. 
+	Lorsque ces modifications sont effectuées, l'affichage de la ligne peut ne 
+	pas être mis à jour automatiquement dans le terminal. rl_redisplay force 
+	alors la mise à jour visuelle, assurant que l'utilisateur voit la ligne 
+	telle qu'elle est réellement en mémoire.
+
+	Prototype :
+		void	rl_redisplay(void);
+
+6)	add_history:
+
+	La fonction add_history est utilisée pour ajouter une ligne de commande à 
+	l'historique des commandes. L'historique des commandes est une 
+	fonctionnalité qui permet aux utilisateurs de rappeler et de réutiliser 
+	facilement les commandes précédemment saisies, en utilisant des touches de 
+	navigation comme les flèches haut et bas.
+	La fonction add_history prend en entrée une chaîne de caractères 
+	représentant la ligne de commande et l'ajoute à l'historique interne de 
+	Readline. Une fois ajoutée, cette ligne peut être rappelée par l'utilisateur
+	dans la session en cours.
+
+	Prototype :
+		int	add_history(const char *line);
+
+7)	wait:
+
+	La fonction wait en C est utilisée pour attendre la fin de l'exécution d'un 
+	processus fils. Lorsque vous créez un nouveau processus à l'aide de fork(), 
+	vous avez généralement un processus parent et un ou plusieurs processus fils
+	. La fonction wait permet au processus parent d'attendre que le processus 
+	fils se termine, puis de récupérer le statut de terminaison du fils.
+
+	Prototype :
+		pid_t	wait(int *status);
+
+	status :
+		Un pointeur vers un entier où sera stocké le statut de 
+		terminaison du processus fils. Ce statut peut fournir des 
+		informations sur la façon dont le processus fils s'est terminé 
+		(normalement, avec un signal, etc.). Si vous ne voulez pas 
+		récupérer ce statut, vous pouvez passer NULL comme argument.
+
+	"""CODE"""
+	if (WIFEXITED(status))
+       printf("Processus fils %d terminé avec le code de sortie %d\n", child_pid, WEXITSTATUS(status));
+    else
+        printf("Le processus fils ne s'est pas terminé normalement.\n");
+    """CODE"""
+
+	WEXITSTATUS(status) => affichera la valeur de retour du dernier process.
+
+8) wait3:
+
+	La fonction wait3 en C est une version avancée de la fonction wait qui 
+	permet d'attendre la fin d'un processus fils, tout en récupérant à la fois 
+	le statut de terminaison et des informations sur l'utilisation des 
+	essources du processus fils (comme le temps CPU consommé).
+	Cette fonction est particulièrement utile si vous avez besoin de plus de 
+	détails sur la performance d'un processus fils en plus de savoir s'il s'est 
+	terminé normalement ou non.
+	wait3 est particulièrement utile lorsque vous devez non seulement attendre
+	la fin d'un processus fils, mais aussi collecter des données sur son 
+	utilisation des ressources. Cela peut être utile pour surveiller les 
+	performances de vos processus ou pour diagnostiquer des problèmes dans 
+	des environnements où les ressources sont critiques.
+
+	Prototype :
+		pid_t	wait3(int *status, int options, struct rusage *rusage);
+
+	status :
+		Un pointeur vers un entier où sera stocké le statut de terminaison du 
+		processus fils. Ce statut peut fournir des informations sur la manière 
+		dont le processus fils s'est terminé.
+
+	options :
+		Un entier qui permet de spécifier des options supplémentaires. 
+		Par exemple, vous pouvez utiliser WNOHANG pour que la fonction ne bloque
+		pas si aucun processus fils n'est encore terminé.
+
+	rusage :
+		Un pointeur vers une structure struct rusage où les informations sur 
+		l'utilisation des ressources (comme le temps processeur et le nombre de 
+		pages mémoire utilisées) seront stockées. Si vous n'êtes pas intéressé 
+		par ces informations, vous pouvez passer NULL.
+
+	structure rusage :
+		struct rusage {
+			struct timeval	ru_utime;	/* temps CPU en mode utilisateur */
+			struct timeval	ru_stime;	/* temps CPU en mode noyau (système) */
+			long			ru_maxrss;	/* mémoire maximale résidente */
+			long			ru_ixrss;	/* mémoire partagée non utilisée */
+			long			ru_idrss;	/* mémoire non partagée utilisée */
+			long			ru_isrss;	/* mémoire utilisée par les threads */
+			/* et beaucoup d'autres champs */
+		};
+
+9)	wait4:
+
+	La fonction wait4 en C est très similaire à wait3, mais elle offre encore 
+	plus de flexibilité en vous permettant d'attendre la fin d'un processus fils
+	spécifique. Comme wait3, elle permet de récupérer à la fois le statut de 
+	terminaison du processus fils et des informations sur l'utilisation des 
+	ressources (comme le temps CPU consommé). Cependant, wait4 vous permet de 
+	spécifier un PID particulier de processus fils à attendre.
+	wait4 est particulièrement utile lorsque vous avez plusieurs processus fils 
+	et que vous voulez attendre un processus spécifique, tout en recueillant des
+	informations détaillées sur son utilisation des ressources. Cette fonction 
+	est souvent utilisée dans les systèmes complexes où la gestion fine des 
+	processus et des ressources est cruciale, comme dans les serveurs, les 
+	applications de calcul intensif, ou les systèmes embarqués.
+
+	Prototype :
+		pid_t	wait4(pid_t pid, int *status, int options, struct rusage *rusage);
+	
+	pid :
+		Le PID du processus fils que vous voulez attendre. Il peut prendre 
+		différentes valeurs pour contrôler quel processus fils attendre :
+			> 0	: 	Attendre le processus fils avec ce PID exact.
+			-1	: 	Attendre n'importe quel processus fils (ĉ wait3).
+			0	:	Attendre n'importe quel processus fils du même groupe de processus.
+			< -1:	Attendre n'importe quel processus fils dont le groupe de processus est égal à la valeur absolue de pid.
+
+	status :
+		Un pointeur vers un entier où sera stocké le statut de terminaison du 
+		processus fils. Ce statut peut fournir des informations sur la manière 
+		dont le processus fils s'est terminé.
+
+	options :
+		Un entier qui permet de spécifier des options supplémentaires, 
+		telles que :
+			WNOHANG:	Ne pas bloquer si aucun processus fils n'est encore terminé.
+			WUNTRACED:	Retourner immédiatement si un processus fils s'arrête, 
+						mais ne se termine pas (par exemple, en étant suspendu).
+
+	rusage :
+		Un pointeur vers une structure struct rusage où les informations sur 
+		l'utilisation des ressources (temps CPU, mémoire, etc.) seront stockées.
+		Si ces informations ne vous intéressent pas, vous pouvez passer NULL.
+
+10)	waitpid:
+
+	La fonction waitpid en C est utilisée pour attendre la fin d'un processus 
+	fils spécifique ou d'un groupe de processus fils. Elle est une version plus 
+	flexible de wait, permettant de spécifier quel processus fils attendre, et 
+	offrant plus de contrôle sur le comportement de l'attente grâce à 
+	l'utilisation d'options.
+
+	Prototype :
+		pid_t	waitpid(pid_t pid, int *status, int options);
+
+11)	signal:
+
+	La fonction signal en C est utilisée pour définir une fonction de gestion 
+	des signaux, c'est-à-dire pour spécifier comment un programme doit réagir 
+	lorsqu'il reçoit un signal particulier. Un signal est un mécanisme 
+	asynchrone de communication utilisé par le système d'exploitation pour 
+	notifier un processus d'un événement. Par exemple, un signal peut être 
+	envoyé lorsqu'un utilisateur appuie sur Ctrl+C (ce qui envoie le signal 
+	SIGINT), lorsqu'un processus enfant se termine (SIGCHLD), ou lorsqu'une 
+	erreur se produit, comme une division par zéro (SIGFPE).
+	signal est utile pour gérer des situations où vous devez réagir à des 
+	événements externes tels que les interruptions, les alarmes, ou la 
+	terminaison de processus enfants. Elle est pratique pour des programmes 
+	simples, mais pour des applications plus complexes ou nécessitant une 
+	gestion plus fine des signaux, sigaction est souvent préféré
+
+	Prototype :
+		void	(*signal(int signum, void (*handler)(int)))(int);
+
+	signum :
+		Un entier représentant le signal que vous voulez gérer. 
+		Les signaux sont pré-définis dans <signal.h>. 
+		Quelques signaux courants incluent :
+			SIGINT :	Interruption du programme (généralement envoyée par Ctrl+C).
+			SIGTERM :	Demande de terminaison du programme.
+			SIGKILL :	Termination immédiate du programme (ne peut pas être intercepté ou ignoré).
+			SIGSEGV :	Violation de segment (accès mémoire invalide).
+			SIGALRM :	Alarme, déclenchée après un délai (via alarm()).
+			SIGCHLD :	Signalé lorsqu'un processus enfant se termine.
+	
+	handler :
+		Un pointeur vers une fonction de gestion des signaux, qui est appelée 
+		lorsque le signal spécifié est reçu. Vous pouvez spécifier trois types 
+		de gestionnaires :
+			Une fonction de gestion :
+				Une fonction personnalisée que vous définissez pour gérer le signal.
+			SIG_IGN :
+				Ignorer le signal.
+			SIG_DFL :
+				Revenir au comportement par défaut pour ce signal.
+
+12)	sigaction:
+
+	La fonction sigaction en C est utilisée pour définir la façon dont un 
+	programme doit réagir à un signal spécifique, offrant plus de contrôle et de
+	fiabilité que la fonction signal. sigaction permet de spécifier des options 
+	supplémentaires, telles que le blocage temporaire d'autres signaux pendant 
+	le traitement, et de gérer les signaux de manière plus portable.
+
+	Prototype :
+		int	sigaction(int signum, const struct sigaction *act, struct sigaction *oldact);
+
+	signum :
+		Un entier représentant le signal que vous souhaitez gérer. Les signaux 
+		sont définis dans <signal.h>, comme SIGINT, SIGTERM, SIGCHLD, etc.
+
+	act :
+		Un pointeur vers une structure struct sigaction qui spécifie la nouvelle
+		action à associer au signal signum.
+
+	oldact :
+		Un pointeur vers une structure struct sigaction où la précédente action 
+		associée au signal sera stockée. Si vous n'avez pas besoin de récupérer 
+		cette information, vous pouvez passer NULL.
+
+	structure sigaction :
+		struct sigaction {
+			void		(*sa_handler)(int);
+			void		(*sa_sigaction)(int, siginfo_t *, void *);
+			sigset_t	sa_mask;
+			int			sa_flags;
+			void		(*sa_restorer)(void);
+		};
+	
+	sa_handler :
+		Un pointeur vers une fonction de gestion des signaux, similaire à celle 
+		utilisée avec signal. Vous pouvez définir une fonction personnalisée ou 
+		utiliser SIG_IGN pour ignorer le signal, ou SIG_DFL pour le comportement
+		par défaut.
+
+	sa_sigaction :
+		Une autre forme de gestionnaire, qui fournit des informations 
+		supplémentaires sur le signal reçu. Ce champ est utilisé si SA_SIGINFO 
+		est défini dans sa_flags.
+
+	sa_mask :
+		Un ensemble de signaux à bloquer pendant l'exécution du gestionnaire.
+		Cela empêche d'autres signaux spécifiés dans sa_mask d'interrompre le 
+		gestionnaire en cours d'exécution.
+
+	sa_flags :
+		Un ensemble de drapeaux qui modifient le comportement du gestionnaire de
+		signaux. Quelques drapeaux courants incluent :
+    	SA_RESTART :
+			Redémarre les appels système interrompus par le signal.
+    	SA_NOCLDSTOP :
+			Ignore SIGCHLD lorsque des processus enfants s'arrêtent.
+    	SA_SIGINFO :
+			Utilise sa_sigaction au lieu de sa_handler, permettant de passer des
+			informations supplémentaires au gestionnaire.
+
+		sa_restorer :
+			Ce champ est obsolète sur la plupart des systèmes modernes et est 
+			rarement utilisé.
+
+13)	sigemptyset:
+
+	La fonction sigemptyset en C est utilisée pour initialiser un ensemble de 
+	signaux (de type sigset_t) à être vide, c'est-à-dire qu'elle supprime tous 
+	les signaux de cet ensemble. Un ensemble de signaux est utilisé pour 
+	spécifier un groupe de signaux dans diverses fonctions de gestion des 
+	signaux, comme sigaction, sigprocmask, ou sigsuspend.
+	sigemptyset est souvent utilisée lorsqu'on doit préparer un ensemble de 
+	signaux pour une opération comme la modification du masque de signaux 
+	bloqués, la gestion des signaux avec sigaction, ou l'attente de signaux 
+	spécifiques avec sigsuspend.
+
+	Prototype :
+		int	sigemptyset(sigset_t *set);
+
+	set :
+		Un pointeur vers une variable de type sigset_t qui représente l'ensemble
+		de signaux. Cette variable est modifiée pour devenir un ensemble vide.
+
+14)	sigaddset:
+
+	La fonction sigaddset en C est utilisée pour ajouter un signal spécifique à 
+	un ensemble de signaux (sigset_t). Cet ensemble de signaux peut ensuite être
+	utilisé pour bloquer ou manipuler les signaux dans un programme.
+	Par exemple, un ensemble de signaux modifié avec sigaddset peut être utilisé
+	avec des fonctions comme sigprocmask pour bloquer temporairement des signaux
+	ou avec sigaction pour spécifier quels signaux doivent être bloqués pendant 
+	le traitement d'un autre signal.
+
+	Prototype :
+		int	sigaddset(sigset_t *set, int signum);
+
+	set :
+		Un pointeur vers une variable de type sigset_t qui représente l'ensemble
+		de signaux. Cette variable doit avoir été initialisée au préalable
+		(généralement avec sigemptyset).
+
+	signum :
+		Le numéro du signal à ajouter à l'ensemble. Les signaux sont représentés
+		par des constantes symboliques comme SIGINT, SIGTERM, etc., définies
+		dans <signal.h>.
+	
+	Exemple :
+	"""CODE"""
+	#include <stdio.h>
+	#include <signal.h>
+	#include <unistd.h>
+	// Gestionnaire de signal
+	void handle_sigint(int sig)
+	{
+		if (sig == 2)
+			printf("\nSignal ctrl + c reçu.\n");
+		else if (sig == 20)
+			printf("\nSignal ctrl + z reçu.\n");
+		else
+			printf("\nSignal reçu.\n");
+	}
+	int main()
+	{
+		struct sigaction sa;
+		// Initialiser l'ensemble de signaux à vide
+		sigemptyset(&sa.sa_mask);
+		// Associer le gestionnaire de signal
+		sa.sa_handler = handle_sigint;
+		// Définir les options
+		sa.sa_flags = 0;
+		// Configurer la gestion du signal SIGINT
+		if (sigaction(SIGINT, &sa, NULL) == -1)
+		{
+			perror("Erreur lors de la configuration de sigaction");
+			return 1;
+		}
+		if (sigaction(SIGTSTP, &sa, NULL) == -1)
+		{
+			perror("Erreur lors de la configuration de sigaction");
+			return 1;
+		}
+		// Boucle infinie pour garder le programme en exécution
+		while (1)
+		{
+			printf("En attente de Ctrl+C ou ctrl+z ...\n");
+			sleep(1);
+		}
+	}
+	"""CODE"""
+
+15)	kill:
+
+	La fonction kill en C est utilisée pour envoyer un signal à un processus ou 
+	à un groupe de processus. Ce signal peut être utilisé pour arrêter le 
+	processus, lui demander de terminer, ou déclencher d'autres actions en 
+	fonction du signal envoyé.
+	La fonction kill est un outil puissant pour interagir avec les processus en 
+	C. En utilisant kill, vous pouvez envoyer des signaux pour contrôler le 
+	comportement des processus, que ce soit pour les arrêter, les suspendre, ou 
+	simplement vérifier leur état. Bien qu'elle soit appelée kill, cette 
+	onction ne se limite pas à tuer des processus, elle permet d'envoyer divers 
+	signaux pour différentes actions selon les besoins.
+
+	Prototype :
+		int	kill(pid_t pid, int sig);
+
+	pid :
+		Il détermine le processus ou le groupe de processus à qui envoyer le 
+		signal. Le comportement dépend de la valeur de pid :
+    		pid > 0 :
+				Le signal est envoyé au processus dont l'identifiant de 
+				processus (PID) est pid.
+    		pid == 0 :
+				Le signal est envoyé à tous les processus du même groupe de 
+				processus que le processus appelant.
+    		pid < -1 :
+				Le signal est envoyé à tous les processus dont le groupe 
+				d'identification est égal à |pid| (la valeur absolue de pid).
+    		pid == -1 :
+				Le signal est envoyé à tous les processus auxquels le processus 
+				appelant a la permission d'envoyer des signaux (à l'exception de
+				lui-même et du processus init).
+	sig :
+		Le signal à envoyer. Il peut s'agir de n'importe quel signal valide 
+		défini dans <signal.h>, comme SIGKILL, SIGTERM, SIGSTOP, etc. Il peut 
+		également être défini à 0 pour vérifier l'existence d'un processus 
+		(dans ce cas, aucun signal n'est réellement envoyé).
+
+16)	getcwd:
+
+	La fonction getcwd en C est utilisée pour obtenir le répertoire de travail 
+	courant (c'est-à-dire le répertoire dans lequel le programme s'exécute 
+	actuellement). Cette fonction est définie dans l'en-tête <unistd.h> et fait 
+	partie de la norme POSIX.
+	
+	Prototype :
+		char	*getcwd(char *buf, size_t size);
+	
+	buf :
+		Un pointeur vers un tableau de caractères (une chaîne de caractères) où 
+		getcwd stockera le chemin absolu du répertoire de travail courant. Si ce
+		pointeur est NULL, la fonction allouera la mémoire nécessaire pour 
+		stocker le chemin en utilisant malloc, et il sera de la responsabilité 
+		de l'utilisateur de libérer cette mémoire par la suite.
+	size :
+		La taille du buffer (nombre de caractères) pointé par buf. Si buf est 
+		NULL, size détermine la taille de l'espace mémoire alloué pour stocker 
+		le chemin.
+	
+	"""CODE"""
+	char	*cwd;
+    // Utiliser NULL pour que getcwd alloue le buffer
+    cwd = getcwd(NULL, 0);
+	free(cwd);
+	"""CODE"""
+
+17)	chdir:
+
+	La fonction chdir en C est utilisée pour changer le répertoire de travail 
+	courant d'un processus. Cela signifie que, après avoir appelé chdir, toutes 
+	les opérations sur les fichiers (ouverture, création, etc.) seront relatives
+	au nouveau répertoire de travail que vous avez spécifié.
+
+	Prototype :
+		int	chdir(const char *path);
+
+	path :
+		Une chaîne de caractères (de type const char *) qui représente le chemin
+		du répertoire vers lequel vous souhaitez changer. Ce chemin peut être 
+		absolu (par exemple, /home/user/documents) ou relatif par rapport au 
+		répertoire de travail courant (par exemple, ../documents).
+
+18)	stat:
+
+	La fonction stat en C est utilisée pour obtenir des informations sur un 
+	fichier ou un répertoire. Elle remplit une structure de type struct stat 
+	avec des détails sur le fichier, tels que sa taille, ses permissions, et ses
+	horodatages. Cette fonction est très utile pour interroger des fichiers et 
+	vérifier leurs attributs sans avoir à les ouvrir.
+	La fonction stat est un outil puissant pour interagir avec le système de 
+	fichiers en C. Elle vous permet de récupérer une grande quantité 
+	d'informations sur des fichiers ou des répertoires, et elle est essentielle 
+	pour toute application qui doit gérer des fichiers de manière avancée.
+	
+	Vérifier l'existence d'un fichier :
+		En utilisant stat, vous pouvez vérifier si un fichier existe et est
+		accessible.
+
+	Interroger les permissions d'un fichier :
+		Vous pouvez déterminer si un fichier est lisible, exécutable, etc., en 
+		vérifiant st_mode.
+
+	Obtenir la taille d'un fichier :
+		Le champ st_size de struct stat vous donne la taille exacte du fichier.
+
+	Vérifier les horodatages :
+		Les champs st_atime, st_mtime, et st_ctime sont utiles pour des 
+		opérations basées sur le temps, comme la synchronisation de fichiers.
+
+	Prototype :
+		int	stat(const char *path, struct stat *buf);
+
+	path :
+		Un pointeur vers une chaîne de caractères qui représente le chemin du 
+		fichier ou du répertoire pour lequel vous souhaitez obtenir des 
+		informations. Le chemin peut être absolu ou relatif.
+	buf :
+		Un pointeur vers une structure struct stat dans laquelle la fonction 
+		stat stockera les informations sur le fichier ou le répertoire.
+
+	structure stat:
+		struct stat
+		{
+			dev_t		st_dev;     // ID du périphérique contenant le fichier
+			ino_t		st_ino;     // Numéro d'inode
+			mode_t		st_mode;    // Mode de protection (permissions)
+			nlink_t		st_nlink;   // Nombre de liens matériels
+			uid_t		st_uid;     // ID de l'utilisateur propriétaire
+			gid_t		st_gid;     // ID du groupe propriétaire
+			dev_t		st_rdev;    // ID du périphérique (si c'est un périphérique spécial)
+			off_t		st_size;    // Taille totale en octets
+			blksize_t	st_blksize; // Taille de bloc préférée pour le système de fichiers
+			blkcnt_t	st_blocks;  // Nombre de blocs alloués
+			time_t		st_atime;   // Heure du dernier accès
+			time_t		st_mtime;   // Heure de la dernière modification
+			time_t		st_ctime;   // Heure du dernier changement d'état
+		};
+
+
+19)	lstat:
+
+	La fonction lstat en C est utilisée pour obtenir des informations sur un 
+	fichier ou un répertoire, tout comme stat, mais avec une différence 
+	importante : elle permet de récupérer des informations sur les liens 
+	symboliques eux-mêmes, plutôt que sur les fichiers ou répertoires auxquels 
+	les liens symboliques pointent.
+
+	La différence principale entre stat et lstat réside dans la façon dont ils 
+	traitent les liens symboliques :
+		stat :
+			Suivant les liens symboliques, stat renvoie des informations sur le 
+			fichier ou le répertoire cible du lien.
+
+    	lstat :
+			Fournit des informations sur le lien symbolique lui-même, sans 
+			suivre le lien. Cela signifie que vous obtenez des détails sur le 
+			lien symbolique, comme la taille du chemin du lien, mais pas sur le 
+			fichier ou répertoire vers lequel le lien pointe.
+
+	Prototype :
+		int lstat(const char *path, struct stat *buf);
+
+20)	fstat:
+
+	La fonction fstat en C est utilisée pour obtenir des informations sur un 
+	fichier qui est déjà ouvert. Contrairement à stat et lstat, qui nécessitent 
+	un chemin de fichier, fstat utilise un descripteur de fichier pour récupérer
+	les informations. Cette fonction est souvent utilisée pour obtenir des 
+	détails sur un fichier après l'avoir ouvert avec une fonction telle que open
+
+	Obtenir des informations sur un fichier ouvert :
+		fstat est particulièrement utile pour obtenir des informations sur un 
+		fichier qui a été ouvert avec open et qui peut être en cours de 
+		manipulation.
+	Vérification de l'état d'un fichier :
+		Vous pouvez utiliser fstat pour vérifier des attributs du fichier 
+		(comme la taille ou les permissions) après l'avoir ouvert pour des 
+		opérations de lecture ou d'écriture.
+	Vérification des permissions :
+		Avec fstat, vous pouvez vérifier les permissions du fichier pour 
+		s'assurer que votre programme a les autorisations nécessaires pour 
+		effectuer des opérations spécifiques.
+
+	La fonction fstat est essentielle pour obtenir des informations sur un 
+	fichier à partir de son descripteur de fichier. Elle est particulièrement 
+	utile dans des programmes qui effectuent des opérations sur des fichiers 
+	ouverts et ont besoin de détails supplémentaires sur ces fichiers pour gérer
+	correctement les opérations suivantes. En combinant fstat avec d'autres 
+	fonctions telles que open, read, et write, vous pouvez gérer efficacement 
+	des fichiers dans vos applications C.
+
+	Prototype :
+		int	fstat(int fd, struct stat *buf);
+	
+	fd :
+		Un descripteur de fichier (un entier) obtenu après avoir ouvert un 
+		fichier avec des fonctions comme open. Le descripteur est utilisé pour 
+		identifier le fichier dans les opérations ultérieures.
+
+	buf :
+		Un pointeur vers une structure struct stat dans laquelle fstat stockera 
+		les informations sur le fichier.
+
+
+
+21)	unlink:
+
+	La fonction unlink en C est utilisée pour supprimer un fichier du système de
+	fichiers. Lorsque vous appelez unlink, le fichier spécifié est marqué pour 
+	suppression, ce qui signifie que le système de fichiers libère l'espace 
+	occupé par le fichier et le retire des répertoires du système de fichiers.
+	Cependant, si le fichier est encore ouvert par un autre processus, il ne 
+	sera complètement supprimé qu'une fois que ce dernier processus le fermera.
+	La fonction unlink est une fonction fondamentale pour la gestion des 
+	fichiers en C. Elle permet de supprimer des fichiers du système de fichiers,
+	ce qui est essentiel pour le nettoyage et la gestion des ressources dans vos
+	applications. Bien que simple, son utilisation doit être soigneusement gérée
+	surtout dans des environnements multithreads ou multi-processus où des 
+	fichiers peuvent être ouverts par plusieurs entités.
+
+	Prototype :
+		int	unlink(const char *pathname);
+
+	pathname :
+		Un pointeur vers une chaîne de caractères (const char *) qui représente 
+		le chemin du fichier que vous souhaitez supprimer. Ce chemin peut être 
+		absolu ou relatif.
+
+22)	opendir:
+
+	La fonction opendir en C est utilisée pour ouvrir un répertoire afin de 
+	pouvoir le lire et explorer son contenu. Elle fait partie de l'API POSIX 
+	pour la gestion des répertoires et est généralement utilisée en conjonction 
+	avec d'autres fonctions comme readdir pour lire les entrées du répertoire et
+	closedir pour fermer le répertoire après utilisation.
+	La fonction opendir est essentielle pour explorer le système de fichiers en 
+	C. Elle permet d'ouvrir un répertoire, de lire son contenu à l'aide de 
+	readdir et de fermer le répertoire avec closedir. En utilisant ces fonctions
+	ensemble, vous pouvez gérer efficacement les répertoires et les fichiers 
+	dans vos programmes C.
+
+	Prototype :
+		DIR	*opendir(const char *name);
+	
+	name :
+		Un pointeur vers une chaîne de caractères (const char *) qui représente 
+		le chemin du répertoire à ouvrir. Ce chemin peut être absolu ou relatif.
+	
+	Includes :
+		#include <sys/types.h>
+		#include <dirent.h>
+	
+	Structure dirent :
+		struct dirent
+		{
+			ino_t			d_ino;			// Numéro d'inode de l'entrée
+			off_t			d_off;			// Offset de l'entrée dans le répertoire
+			unsigned short	d_reclen;		// Longueur de l'entrée
+			unsigned char	d_type;			// Type de l'entrée (fichier, répertoire, etc.)
+			char			d_name[256];	// Nom de l'entrée (peut varier en taille)
+		};
+
+23)	readdir:
+
+	La fonction readdir en C est utilisée pour lire les entrées d'un répertoire 
+	ouvert. Elle fait partie de l'API POSIX et est utilisée en conjonction avec 
+	opendir pour ouvrir un répertoire et closedir pour le fermer. Lorsque vous 
+	utilisez readdir, vous pouvez parcourir les fichiers et sous-répertoires 
+	contenus dans un répertoire donné.
+
+	Fin du répertoire :
+		Lorsque readdir retourne NULL, cela peut signifier que vous avez atteint
+		la fin des entrées du répertoire ou qu'une erreur est survenue.
+		Vous pouvez vérifier errno si NULL est retourné pour déterminer la cause
+		de l'échec.
+	Gestion des erreurs :
+		Assurez-vous de vérifier si opendir et readdir réussissent.
+		En cas d'échec, perror ou la variable globale errno peut fournir des 
+		informations utiles pour le débogage.
+	Structure dirent :
+		La structure dirent vous donne des informations sur l'entrée du 
+		répertoire. Le champ d_name contient le nom de l'entrée. Le champ d_type
+		peut être utilisé pour déterminer le type de l'entrée (comme un fichier 
+		régulier, un répertoire, etc.).
+
+	Prototype :
+		struct dirent	*readdir(DIR *dirp);
+	
+	dirp :
+		Un pointeur vers un objet de type DIR, obtenu en appelant opendir. Cet 
+		objet représente le répertoire que vous souhaitez lire.
+
+24)	closedir:
+
+	La fonction closedir en C est utilisée pour fermer un répertoire qui a été 
+	précédemment ouvert avec la fonction opendir. Elle fait partie de l'API 
+	POSIX pour la gestion des répertoires et est essentielle pour libérer les 
+	ressources associées à l'objet DIR après que vous avez terminé de lire le 
+	contenu du répertoire.
+
+	Prototype :
+		int	closedir(DIR *dirp);
+	
+25)	isatty:
+
+	La fonction isatty en C est utilisée pour déterminer si un descripteur de 
+	fichier correspond à un terminal ou à un périphérique de type terminal. 
+	Cela peut être utile pour savoir si la sortie standard (stdout) est 
+	redirigée vers un fichier ou si elle est effectivement un terminal (comme un
+	écran de terminal).
+	La fonction isatty est une fonction utile pour déterminer si un descripteur 
+	de fichier correspond à un terminal. Elle est souvent utilisée pour ajuster 
+	le comportement de programmes en fonction de leur contexte d'exécution, 
+	permettant ainsi de s'adapter à des environnements variés comme des 
+	terminaux interactifs ou des redirections de sortie vers des fichiers. En 
+	utilisant isatty, vous pouvez rendre vos programmes plus flexibles et 
+	conviviaux en offrant des fonctionnalités adaptées à différents types de 
+	sortie.
+	isatty est souvent utilisé dans les programmes pour ajuster le comportement 
+	en fonction du type de sortie. Par exemple, un programme peut afficher des 
+	informations colorées ou formatées de manière spéciale si la sortie est un 
+	terminal, mais utiliser une sortie simplifiée ou non formatée lorsqu'il est 
+	redirigé vers un fichier.
+
+	Prototype :
+		int	isatty(int fd);
+	
+26)	ttyname:
+
+	La fonction ttyname en C est utilisée pour obtenir le nom du périphérique 
+	terminal associé à un descripteur de fichier. Elle fait partie de l'API 
+	POSIX et est utile pour identifier le fichier spécial du terminal 
+	correspondant à un descripteur de fichier donné.
+	La fonction ttyname permet d'obtenir le nom du périphérique terminal associé
+	à un descripteur de fichier. Elle est utile pour identifier et travailler 
+	avec des terminaux dans des programmes C. En utilisant ttyname, vous pouvez 
+	obtenir des informations sur les périphériques terminaux, ce qui peut être 
+	précieux pour le débogage ou pour adapter le comportement des programmes en 
+	fonction du terminal utilisé.
+
+	Prototype :
+		char	*ttyname(int fd);
+
+27)	ttyslot:
+
+	La fonction ttyslot en C est utilisée pour obtenir le numéro de slot (ou 
+	numéro de terminal) associé à l'instance courante d'un terminal. Ce numéro 
+	est souvent utilisé dans les systèmes Unix pour identifier les terminaux de 
+	manière unique. La fonction fait partie de l'API POSIX et est utile pour 
+	obtenir des informations sur la session terminal en cours.
+	La fonction ttyslot est utilisée pour obtenir le numéro de slot associé à 
+	l'instance courante d'un terminal. Ce numéro est utilisé pour identifier de 
+	manière unique le terminal dans le système. En utilisant ttyslot, vous 
+	pouvez obtenir des informations utiles sur le terminal en cours 
+	d'utilisation, ce qui peut être précieux pour des opérations de gestion de 
+	sessions ou pour le débogage dans les environnements Unix.
+
+	Prototype :
+		int	ttyslot(void);
+
+28)	ioctl:
+
+	La fonction ioctl en C est utilisée pour manipuler les périphériques à un 
+	niveau plus bas que les opérations standard d'entrée/sortie (I/O). Elle 
+	permet d'envoyer des commandes spécifiques à des périphériques ou des 
+	fichiers spéciaux et de récupérer des informations spécifiques sur ces 
+	périphériques. ioctl est souvent utilisée pour configurer les propriétés 
+	des périphériques comme les terminaux, les disques, les réseaux, et plus 
+	encore.
+	La fonction ioctl est un outil puissant pour manipuler des périphériques à 
+	un niveau bas, permettant des opérations spécifiques qui ne sont pas 
+	couvertes par les opérations I/O standard. Elle est utilisée dans divers 
+	contextes, y compris la gestion des terminaux, des réseaux et des 
+	périphériques de stockage. En utilisant ioctl, vous pouvez obtenir des 
+	informations détaillées sur les périphériques et les configurer selon vos 
+	besoins spécifiques.
+
+	Prototype :
+		int	ioctl(int fd, unsigned long request, ...);
+
+	Include :
+		#include <sys/ioctl.h>
+	
+29)	tcsetattr:
+
+	La fonction tcsetattr en C est utilisée pour modifier les attributs d'un 
+	terminal. Elle fait partie de l'API POSIX pour la gestion des terminaux et 
+	est souvent utilisée pour configurer le comportement des terminaux, comme 
+	les paramètres de communication série et les modes de traitement des 
+	entrées/sorties.
+	La fonction tcsetattr est un outil puissant pour configurer les attributs 
+	d'un terminal. En utilisant tcsetattr, vous pouvez modifier des paramètres 
+	tels que le mode d'écho des caractères, les vitesses de transmission, et 
+	d'autres options de contrôle du terminal, ce qui vous permet de 
+	personnaliser le comportement des terminaux dans vos programmes C.
+
+	Prototype :
+		int	tcsetattr(int fd, int optional_actions, const struct termios *termios_p);
+
+	Include :
+		#include <termios.h>
+
+30)	tcgetattr:
+
+	La fonction tcgetattr en C est utilisée pour obtenir les attributs du 
+	terminal associés à un descripteur de fichier. Elle fait partie de l'API 
+	POSIX pour la gestion des terminaux et permet de récupérer les paramètres de
+	configuration du terminal, tels que les options de communication série, les 
+	modes de traitement des entrées/sorties, et d'autres paramètres liés au 
+	comportement du terminal.
+	La fonction tcgetattr est un outil essentiel pour récupérer les attributs de
+	configuration d'un terminal dans les systèmes Unix. Elle permet d'obtenir 
+	des informations sur les paramètres de communication série, les modes de 
+	traitement des entrées/sorties, et d'autres options liées au terminal. En 
+	utilisant tcgetattr, vous pouvez configurer le comportement du terminal et 
+	adapter les programmes à divers besoins en matière d'interaction avec 
+	l'utilisateur et de gestion des données.
+
+	Prototype :
+		int	tcgetattr(int fd, struct termios *termios_p);
+
+	Include :
+		#include <termios.h>
+
+31)	tgetent:
+
+	La fonction tgetent en C est utilisée pour récupérer les informations de 
+	configuration d'un terminal depuis une base de données de terminaux, 
+	généralement le fichier /etc/termcap ou /usr/share/terminfo. Elle fait 
+	partie de l'ancienne API de gestion des terminaux basée sur le fichier 
+	termcap, et est utilisée pour configurer des aspects du terminal comme les 
+	séquences d'échappement.
+	En plus de tgetent, il existe d'autres fonctions comme tgetflag, tgetnum, et
+	tgetstr qui sont utilisées pour obtenir des informations spécifiques sur les
+	capacités du terminal, comme les séquences d'échappement et les paramètres 
+	de configuration.
+	La fonction tgetent est utilisée pour charger les informations de 
+	configuration d'un terminal à partir d'une base de données de terminaux. 
+	Elle est utile pour récupérer des informations sur les capacités du terminal
+	et pour configurer des aspects du terminal comme les séquences d'échappement
+	Bien que tgetent fasse partie d'une API plus ancienne basée sur le fichier 
+	termcap, elle est encore utilisée dans certains systèmes et applications
+	pour la gestion des terminaux.
+
+	Prototype :
+		int	tgetent(char *bp, const char *name);
+	
+	bp :
+		Un pointeur vers un buffer de mémoire où les informations de 
+		configuration du terminal seront stockées. Ce buffer doit être 
+		suffisamment grand pour contenir les données lues depuis la base de 
+		données de terminaux. Il est généralement alloué dynamiquement par 
+		l'application.
+	name :
+		Le nom du terminal dont vous souhaitez obtenir les informations. Cela 
+		peut être le nom du terminal tel qu'il apparaît dans la base de données 
+		de terminaux, comme xterm, vt100, ou d'autres noms de terminaux.
+
+	Include :
+		#include <termcap.h>
+
+32)	tgetflag:
+
+	La fonction tgetflag en C est utilisée pour récupérer des informations sur 
+	les capacités d'un terminal, spécifiquement pour obtenir les valeurs des 
+	flags (indicateurs) dans la base de données de terminaux, après avoir 
+	utilisé tgetent pour charger les informations du terminal. Elle fait partie 
+	de l'ancienne API de gestion des terminaux basée sur le fichier termcap, 
+	qui est utilisée pour gérer les paramètres de configuration des terminaux 
+	dans les systèmes Unix.
+	La fonction tgetflag est utilisée pour obtenir des informations sur les 
+	capacités de base d'un terminal, en particulier les flags qui indiquent la 
+	prise en charge de certaines fonctionnalités. En combinaison avec tgetent, 
+	elle vous permet de vérifier et d'utiliser les capacités spécifiques du 
+	terminal dans vos applications. Bien que tgetflag fasse partie d'une API 
+	plus ancienne basée sur le fichier termcap, elle est encore utile pour la 
+	gestion des terminaux dans certains contextes et systèmes.
+
+	Prototype :
+		int	tgetflag(const char *id);
+
+	Include :
+		#include <termcap.h>
+
+33)	tgetnum:
+
+	La fonction tgetnum en C est utilisée pour récupérer des informations 
+	numériques spécifiques sur les capacités d'un terminal, après que les 
+	informations de configuration du terminal ont été chargées avec tgetent.
+	Elle fait partie de l'API POSIX pour la gestion des terminaux basée sur le 
+	fichier termcap.
+	La fonction tgetnum est un outil pratique pour obtenir des informations 
+	numériques sur les capacités d'un terminal en utilisant la base de données 
+	de terminaux. En combinaison avec tgetent, elle vous permet de récupérer des
+	valeurs spécifiques comme le nombre de colonnes ou de lignes du terminal, ce
+	qui peut être utile pour adapter les sorties de votre programme aux 
+	caractéristiques du terminal. Bien que tgetnum fasse partie d'une API plus 
+	ancienne basée sur le fichier termcap, elle est encore utilisée pour la 
+	gestion des terminaux dans certains contextes et systèmes.
+
+	Prototype :
+		int	tgetnum(const char *id);
+
+	Include :
+		#include <termcap.h>
+
+34)	tgetstr:
+
+	La fonction tgetstr en C est utilisée pour récupérer des chaînes de 
+	caractères spécifiques, appelées séquences d'échappement, qui sont définies 
+	dans la base de données des terminaux. Ces séquences d'échappement sont 
+	utilisées pour contrôler divers aspects du terminal, comme la mise en forme 
+	du texte ou les mouvements du curseur. La fonction fait partie de l'ancienne
+	API basée sur le fichier termcap.
+	La fonction tgetstr est utilisée pour récupérer des chaînes de caractères 
+	spécifiques, telles que des séquences d'échappement, définies dans la base 
+	de données des terminaux. En combinaison avec tgetent, elle vous permet de 
+	récupérer et d'utiliser des séquences pour contrôler divers aspects du 
+	terminal. Bien que tgetstr fasse partie d'une API plus ancienne basée sur le
+	fichier termcap, elle est encore utilisée dans certains contextes pour gérer
+	les capacités des terminaux.
+
+	Prototype :
+		char	*tgetstr(const char *id, char **area);
+
+	Include :
+		#include <termcap.h>
+
+35)	tgoto:
+
+	La fonction tgoto en C est utilisée pour formater une séquence d'échappement
+	de terminal en fonction des paramètres de positionnement du curseur. Elle 
+	est particulièrement utile lorsque vous souhaitez déplacer le curseur à une 
+	position spécifique dans un terminal en utilisant une séquence d'échappement
+	de terminal. tgoto est souvent utilisée en conjonction avec la fonction 
+	tputs pour envoyer la séquence d'échappement formatée au terminal.
+	La fonction tgoto est utilisée pour formater une séquence d'échappement de 
+	terminal en fonction des paramètres de positionnement du curseur. En 
+	combinaison avec tgetstr, elle vous permet de récupérer et de formater des 
+	séquences d'échappement pour contrôler le positionnement du curseur dans un 
+	terminal. Bien que tgoto fasse partie d'une API plus ancienne basée sur le 
+	fichier termcap, elle est encore utilisée dans certains contextes pour la 
+	gestion des terminaux.
+
+	Prototype :
+		char	*tgoto(const char *cap, int col, int row);
+
+	Include :
+		#include <termcap.h>
+
+36)	tputs:
+
+	La fonction tputs en C est utilisée pour envoyer une séquence d'échappement 
+	au terminal, avec la possibilité de répéter cette séquence un certain nombre
+	de fois. Cette fonction est souvent utilisée après avoir récupéré et/ou 
+	formaté une séquence d'échappement avec tgetstr ou tgoto. tputs s'assure 
+	également que les séquences d'échappement sont envoyées au terminal avec le 
+	bon délai si nécessaire, en fonction des caractéristiques du terminal.
+	La fonction tputs est utilisée pour envoyer des séquences d'échappement 
+	formatées au terminal, en gérant les détails nécessaires comme la répétition
+	et le timing. En combinaison avec tgetstr et tgoto, tputs permet de 
+	contrôler efficacement les fonctionnalités du terminal, telles que 
+	l'effacement de l'écran, le déplacement du curseur, et bien d'autres 
+	manipulations.
+
+	Prototype :
+		int	tputs(const char *str, int affcnt, int (*putc)(int));
+
+	Include :
+		#include <termcap.h>
+
+37)	getenv:
+
+	La fonction getenv en C est utilisée pour récupérer la valeur d'une variable
+	d'environnement. Les variables d'environnement sont des paires nom/valeur 
+	qui sont généralement définies par le système d'exploitation et peuvent être
+	utilisées pour configurer le comportement des applications. Par exemple, la 
+	variable d'environnement PATH contient une liste des répertoires où le 
+	système cherche des exécutables.
+
+	Prototype :
+		char *getenv(const char *name);
+
+	Include :
+		#include <stdlib.h>
+	
