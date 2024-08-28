@@ -6,65 +6,68 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 10:24:30 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/24 11:53:29 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/08/28 10:18:00 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
-extern char	**environ;
-
-static t_env	*ft_add_node(t_env *a_env, char *value)
+t_env	*ft_add_node(t_env *env, char *key, char *value)
 {
 	t_env	*node;
 	t_env	*current;
 
-	current = a_env;
 	node = (t_env *)ft_calloc(1, sizeof(t_env));
 	if (!node)
 		return (NULL);
+	node->key = ft_strdup(key);
+	if (!node->key)
+		return (free(node), NULL);
 	node->value = ft_strdup(value);
 	if (!node->value)
-	{
-		free(node);
-		return (NULL);
-	}
+		return (free(node->key), free(node), NULL);
 	node->next = NULL;
-	if (!a_env)
+	if (!env)
 		return (node);
+	current = env;
 	while (current->next)
 		current = current->next;
 	current->next = node;
-	return (a_env);
+	return (env);
 }
 
 void	ft_init_env(t_env **env, char **envp)
 {
+	char	**key_value;
 	int		index;
-	int		alloc;
 
-	alloc = 0;
-	if (!envp)
-	{
-		envp = ft_strarraycpy(environ);
-		alloc = 1;
-	}
 	index = -1;
 	*env = NULL;
 	while (envp[++index])
-		*env = ft_add_node(*env, envp[index]);
-	if (alloc)
-		ft_free_array(envp);
+	{
+		key_value = ft_split(envp[index], '=');
+		*env = ft_add_node(*env, key_value[0], key_value[1]);
+		ft_free_array(key_value);
+	}
+	ft_update_shlvl(env);
 }
 
-void	ft_env(t_env *env)
+int	ft_env(t_env **env)
 {
+	char	*value;
 	t_env	*current;
 
-	current = env;
-	while (current->next)
+	value = ft_get_env_value(*env, "PATH");
+	if (!env || !value)
 	{
-		printf("%s\n", current->value);
+		printf(TERM_NAME": env: No such file or directory\n");
+		return (127);
+	}
+	current = *env;
+	while (current)
+	{
+		printf("%s=%s\n", current->key, current->value);
 		current = current->next;
 	}
+	return (0);
 }

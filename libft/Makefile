@@ -6,7 +6,7 @@
 #    By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/19 13:47:49 by nfordoxc          #+#    #+#              #
-#    Updated: 2024/08/23 09:32:21 by nfordoxc         ###   Luxembourg.lu      #
+#    Updated: 2024/08/27 10:07:12 by nfordoxc         ###   Luxembourg.lu      #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 ################################################################################
 
 CC				=	cc
-CFLAGS			=	-Wall -Werror -Wextra
+CFLAGS			=	-Wall -Werror -Wextra -g
 
 DEB				=	valgrind
 DEB_OPT			=	--tool=memcheck --leak-check=full --show-leak-kinds=all
@@ -169,7 +169,7 @@ $(NAME):	$(OBJ)
 		printf "="; \
 	done
 	@printf "] $(CURRENT_FILE)/$(NB_SRC)"
-	@cc -Wall -Werror -Wextra -c -o $@ $<
+	@$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
 	@$(RM) *.o > /dev/null 2>&1

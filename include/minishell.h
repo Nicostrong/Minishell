@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:46:06 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/23 14:57:00 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/08/28 12:17:11 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 # define BLUE	"\033[1;94m"
 # define WHITE	"\033[0m"
-# define TERM_NAME	BLUE"minishell"WHITE"$ "
+# define TERM_NAME	BLUE"minishell"WHITE
 
 /*
  *	Standart library
@@ -45,19 +45,16 @@
 
 typedef struct s_env
 {
+	char			*key;
 	char			*value;
 	struct s_env	*next;
-} t_env;
+}	t_env;
 
 typedef struct s_data
 {
 	char	*cmd;
-	char	pwd[2048];
-	char	*line;
-	char	**env;
-	char	**array_line;
 	int		code_child;
-} t_data;
+}	t_data;
 
 //typedef struct s_command t_cmd;
 
@@ -74,34 +71,68 @@ typedef struct s_cmd
 	int				is_subshell;	// 1 si la commande est une sous-shell (parenthèses)
 	int				is_dir;			// 1 si c est un dossier
 	int				is_file;		// 1 si c est un fichier
-} t_cmd;
+}	t_cmd;
 
 /*
  *	Buildin
  */
 
-/*
-echo (with option -n only)
-cd (with path)
-pwd (no option)
-export (no option)
-unset (no option)
-env (no option)
-exit (no option)
-*/
+	/*
+	 *	echo
+	 */
 
-int			ft_exit(t_data *data);
+int			ft_echo(t_data *data, t_env *env);
 
-void		ft_cd(char *cmd, t_env *env, t_data *data);
-void		ft_env(t_env *env);
-void		ft_echo(t_data *data);
+	/*
+	 *	env
+	 */
+
+int			ft_env(t_env **env);
+
+char		*ft_get_env_value(t_env *env, const char *name);
+
+void		ft_free_env(t_env *env);
+void		ft_update_shlvl(t_env **env);
 void		ft_init_env(t_env **env, char **envp);
+void		ft_set_env_value(t_env **env, char *name, char *value);
+
+t_env		*ft_add_node(t_env *env, char *key, char *value);
+
+	/*
+	 *	exit
+	 */
+
+int			ft_exit(t_data *data, t_env **env);
+
+	/*
+	 *	export
+	 */
+
+int			ft_export(t_data *data, t_env *env);
+
+	/*
+	 *	cd
+	 */
+
+int			ft_cd(t_data *data, t_env *env);
+
+	/*
+	 *	pwd
+	 */
+
+int			ft_pwd(t_env *env);
+
+	/*
+	 *	unset
+	 */
+
+int			ft_unset(t_data *data, t_env **env);
 
 /*
  *	Global
  */
 
-void		ft_builtin(t_data *data, t_env *env);
+void		ft_builtin(t_data *data, t_env **env);
 void		handle_signal(int sign);
 
 #endif

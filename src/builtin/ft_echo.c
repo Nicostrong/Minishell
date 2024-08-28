@@ -6,11 +6,11 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 09:55:36 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/21 13:25:44 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/08/27 13:28:58 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 static int	ft_get_opt(char *line)
 {
@@ -24,12 +24,14 @@ static int	ft_get_opt(char *line)
 	return (0);
 }
 
-void	ft_echo(t_data *data)
+int	ft_echo(t_data *data, t_env *env)
 {
+	//char 	var;
 	char	**array;
 	int		opt;
 	int		index;
 
+	(void)env;
 	opt = 0;
 	add_history(data->cmd);
 	array = ft_split(data->cmd, ' ');
@@ -37,7 +39,7 @@ void	ft_echo(t_data *data)
 	{
 		data->code_child = 0;
 		ft_putendl_fd("", 1);
-		return ;
+		return (0);
 	}
 	index = 1;
 	if (array[index][0] == '-')
@@ -46,11 +48,17 @@ void	ft_echo(t_data *data)
 	{
 		while (array[++index])
 		{
-			ft_putstr_fd(array[index], 1);
+			/*if (array[index][0] == '$')
+			{
+				var = ft_get_env_value(env, array[index]);
+				printf("%s\n", var);
+				free(var);
+			}
+			else*/
+				ft_putstr_fd(array[index], 1);
 			if (array[index + 1])
 				ft_putchar_fd(' ', 1);
 		}
-		data->code_child = 0;
 	}
 	else
 	{
@@ -61,8 +69,7 @@ void	ft_echo(t_data *data)
 			index++;
 		}
 		ft_putchar_fd('\n', 1);
-		data->code_child = 0;
 	}
 	ft_free_array(array);
-	return ;
+	return (0);
 }
