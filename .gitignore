@@ -2,7 +2,7 @@
 ./a.out
 *.swp
 *.o
-./../*.o
+./*/*.o
 ./*.o
 *.DS_Store
 .vscode/
