@@ -1,3 +1,10 @@
+Pour tester le minishell :
+
+/////////////////////////////////////////////////////////////
+echo 'pwd;cd ..;pwd'| tr ';' '\n' | valgrind --tool=memcheck --leak-check=full --show-leak-kinds=definite,indirect,possible --track-fds=yes ./minishell
+echo 'pwd' | valgrind --tool=memcheck --leak-check=full --show-leak-kinds=definite,indirect,possible --track-fds=yes ./minishell
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
 Explications des fonctions autorisees pour le projet Minishell
 
 1)	readline:

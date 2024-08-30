@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:46:06 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/28 12:17:11 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/08/28 13:39:01 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,14 +87,14 @@ int			ft_echo(t_data *data, t_env *env);
 	 *	env
 	 */
 
-int			ft_env(t_env **env);
+int			ft_env(t_data *data, t_env **env);
 
 char		*ft_get_env_value(t_env *env, const char *name);
 
 void		ft_free_env(t_env *env);
 void		ft_update_shlvl(t_env **env);
 void		ft_init_env(t_env **env, char **envp);
-void		ft_set_env_value(t_env **env, char *name, char *value);
+void		ft_set_env_value(t_env *env, char *name, char *value);
 
 t_env		*ft_add_node(t_env *env, char *key, char *value);
 

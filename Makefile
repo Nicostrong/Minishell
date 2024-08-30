@@ -6,7 +6,7 @@
 #    By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/16 09:35:29 by nfordoxc          #+#    #+#              #
-#    Updated: 2024/08/22 13:16:40 by nfordoxc         ###   Luxembourg.lu      #
+#    Updated: 2024/08/28 09:43:21 by nfordoxc         ###   Luxembourg.lu      #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,8 +21,9 @@ CC_OPT			=
 DEB				=	valgrind
 DEB_OPT			=	--tool=memcheck \
 					--leak-check=full \
-					--show-leak-kinds=all \
+					--show-leak-kinds=definite,indirect,possible \
 					--track-fds=yes
+
 
 ARG0			=	
 
@@ -62,11 +63,15 @@ MYLIBS_BONUS	=
 
 SRC				=	./src/main.c \
 					./src/ft_builtin.c \
-					./src/ft_echo.c \
-					./src/ft_env.c \
-					./src/ft_cd.c \
 					./src/ft_signal.c \
-					./src/ft_exit.c
+					./src/builtin/ft_echo.c \
+					./src/builtin/ft_env.c \
+					./src/builtin/ft_env_utils.c \
+					./src/builtin/ft_export.c \
+					./src/builtin/ft_cd.c \
+					./src/builtin/ft_pwd.c \
+					./src/builtin/ft_unset.c \
+					./src/builtin/ft_exit.c
 
 OBJ				=	$(SRC:.c=.o)
 
@@ -115,7 +120,7 @@ BWHITE			=	'\033[1;97m'
 ################################################################################
 
 CURRENT_FILE	= 	0
-NB_SRC			=	6
+NB_SRC			=	8
 SLEEP_TIME		=	0.001
 
 ################################################################################
@@ -151,10 +156,9 @@ $(LIB_LIBFT_DIR)/libft.a:
 		printf "="; \
 	done
 	@printf "] $(CURRENT_FILE)/$(NB_SRC) $(RESET)"
-	@cc -Wall -Werror -Wextra -c -o $@ $<
+	@$(CC) $(CFLAGS) -c -o $@ $<
 
 deb:		$(LIB_LIBFT_DIR)/libft.a \
-			$(LIB_GNL_DIR)/libgnl.a \
 			$(OBJ)
 
 	@$(CC) $(CFLAGS) $(CC_OPT) $(OBJ) $(MYLIBS) -g -o $(NAME)
