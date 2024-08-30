@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 16:16:30 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/06/17 11:09:57 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/08/30 09:09:36 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,15 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	size_t	index;
 	size_t	len_new;
 
+	if (!s)
+		return (NULL);
 	if (start >= ft_strlen(s))
 		return (ft_strdup(""));
 	len_new = ft_strlen(s) - start + 1;
 	if (len_new > len)
 		len_new = len + 1;
 	new = (char *)malloc(len_new * sizeof(char));
-	if (!new || !s)
+	if (!new)
 		return (NULL);
 	index = 0;
 	while (len-- && s[start])

@@ -1,39 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strequal.c                                      :+:      :+:    :+:   */
+/*   ft_putstrarray.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/22 15:00:34 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/28 13:54:16 by nfordoxc         ###   Luxembourg.lu     */
+/*   Created: 2024/08/29 13:04:59 by nfordoxc          #+#    #+#             */
+/*   Updated: 2024/08/29 13:09:07 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "libft.h"
 
 /*
- * <cat>bool</cat>
+ * <cat>print</cat>
  *
  * <summary>
- *	int	ft_strequal(const char *s1, const char *s2)
+ *	void	ft_putstrarray(char **a_str)
  * </summary>
  *
  * <description>
- *	ft_strcmp compare if two strings are equal or not.
+ *	ft_putstrarray print an array of string.
  * </description>
  *
- * <param type="const void *" name="s1">string 1</param>
- * <param type="const void *" name="s2">string 2</param>
+ * <param type="char **" name="a_str">str array to print</param>
  *
  * <return>
- *	1, if s1 == s2,
- *	0, if s1 != s2,
+ *	void.
  * </return>
  *
  */
 
-int	ft_strequal(const char *s1, const char *s2)
+void	ft_putstrarray(char **a_str)
 {
-	return (ft_strcmp(s1, s2) == 0);
+	int	index;
+
+	if (!a_str)
+		return ;
+	index = -1;
+	while (a_str[++index])
+		ft_putendl_fd(a_str[index], 1);
 }

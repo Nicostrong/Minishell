@@ -6,7 +6,7 @@
 #    By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/19 13:47:49 by nfordoxc          #+#    #+#              #
-#    Updated: 2024/08/27 10:07:12 by nfordoxc         ###   Luxembourg.lu      #
+#    Updated: 2024/08/29 13:09:26 by nfordoxc         ###   Luxembourg.lu      #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,8 @@ LIB_NAME		=	libft.a
 #	Mandatory part                                                             #
 ################################################################################
 
-SRC				=	ft_isalpha.c \
+SRC				=	ft_charchr.c \
+					ft_isalpha.c \
 					ft_isdigit.c \
 					ft_isalnum.c \
 					ft_isascii.c \
@@ -77,6 +78,7 @@ SRC				=	ft_isalpha.c \
 					ft_striteri.c \
 					ft_putchar_fd.c \
 					ft_putstr_fd.c \
+					ft_putstrarray.c \
 					ft_putendl_fd.c \
 					ft_putnbr_fd.c \
 					ft_countsection.c \
@@ -137,7 +139,7 @@ BWHITE			=	'\033[1;97m'
 ################################################################################
 
 CURRENT_FILE	= 	0
-NB_SRC			=	52
+NB_SRC			=	54
 SLEEP_TIME		=	0.001
 
 ################################################################################

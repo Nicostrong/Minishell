@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 09:48:29 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/06/17 11:08:49 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/08/30 09:18:19 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	unsigned char	*d;
 	unsigned char	*s;
 
-	if (!dest && !src)
+	if (!dest || !src)
 		return (NULL);
 	d = (unsigned char *)dest;
 	s = (unsigned char *)src;

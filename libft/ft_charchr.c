@@ -1,39 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strequal.c                                      :+:      :+:    :+:   */
+/*   ft_charchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/22 15:00:34 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/28 13:54:16 by nfordoxc         ###   Luxembourg.lu     */
+/*   Created: 2024/08/29 11:44:25 by nfordoxc          #+#    #+#             */
+/*   Updated: 2024/08/29 11:49:10 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
 /*
- * <cat>bool</cat>
+ * <cat>str</cat>
  *
  * <summary>
- *	int	ft_strequal(const char *s1, const char *s2)
+ *	int	ft_charchr(const char *s, char c)
  * </summary>
  *
  * <description>
- *	ft_strcmp compare if two strings are equal or not.
+ *	ft_charchr return the index of char c on the string s.
  * </description>
  *
- * <param type="const void *" name="s1">string 1</param>
- * <param type="const void *" name="s2">string 2</param>
+ * <param type="const char *" name="s">string to parse</param>
+ * <param type="char" name="c">char to fund</param>
  *
  * <return>
- *	1, if s1 == s2,
- *	0, if s1 != s2,
+ *	the index of the char c or -1 if not fund.
  * </return>
  *
  */
 
-int	ft_strequal(const char *s1, const char *s2)
+int	ft_charchr(const char *s, char c)
 {
-	return (ft_strcmp(s1, s2) == 0);
+	int	index;
+
+	index = -1;
+	if (!s)
+		return (index);
+	while (s[++index])
+		if (s[index] == c)
+			return (index);
+	if (c == 0)
+		return (index);
+	return (-1);
 }
