@@ -6,11 +6,31 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 10:24:10 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/28 12:14:23 by nfordoxc         ###   ########.fr       */
+/*   Updated: 2024/08/28 15:18:57 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+/*
+ * <cat>minishell</cat>
+ *
+ * <summary>
+ * 	void	ft_unset_key(t_env **env, char *key)
+ * </summary>
+ *
+ * <description>
+ * 	ft_unset_key remove properly the key on the linked list env.
+ * </description>
+ *
+ * <param type="t_env **" name="env">linked list env</param>
+ * <param type="tchar *" name="key">key of node to remove</param>
+ *
+ * <return>
+ * 	void.
+ * </return>
+ *
+ */
 
 static void	ft_unset_key(t_env **env, char *key)
 {
@@ -37,6 +57,27 @@ static void	ft_unset_key(t_env **env, char *key)
 		free(current);
 	}
 }
+
+/*
+ * <cat>minishell</cat>
+ *
+ * <summary>
+ * 	int	ft_unset(t_data *data, t_env **env)
+ * </summary>
+ *
+ * <description>
+ * 	ft_unset is like a builtin function in bash.it can take many arguments to 
+ * 	remove of the linked list.
+ * </description>
+ *
+ * <param type="t_data *" name="data">data struct</param>
+ * <param type="t_env **" name="env">linked list env</param>
+ *
+ * <return>
+ * 	0 if success or 1 if error.
+ * </return>
+ *
+ */
 
 int	ft_unset(t_data *data, t_env **env)
 {

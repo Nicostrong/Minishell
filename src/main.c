@@ -6,11 +6,45 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:41:47 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/28 10:08:42 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/08/29 11:14:42 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+/*
+ * <cat>minishell</cat>
+ *
+ * <summary>
+ *	minishell
+ * </summary>
+ *
+ * <description>
+ *	minishell is like a bash shell. It 's running with the same isue of bash
+ *	and contant some builtin function.
+ *	Builtin function :
+ *		- env without options/arguments;
+ *		- pwd without options;
+ *		- cd with relative or absolut path;
+ *		- unset without options;
+ *		- export without options;
+ *		- echo with -n option;
+ *		- exit without options;
+ *	Minishell is available to interpret :
+ *		- multiple pipi;
+ *		- ", ', (, ), <, <<, >, >>, &&, ||;
+ *		- ctrl + c => displays a new prompt on a new line;
+ *		- ctrl + D => exits the shell;
+ *		- ctrl + \ => does nothing;
+ *		- $ENV_VARIABLE;
+ *	It've got a history commands.
+ * </description>
+ *
+ * <return>
+ *	0 in success or 1 in error.
+ * </return>
+ *
+ */
 
 int main(int argc, char **argv, char **envp)
 {

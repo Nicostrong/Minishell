@@ -6,11 +6,30 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 10:24:30 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/28 13:51:55 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/08/29 10:44:00 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+/*
+ * <cat>minishell</cat>
+ *
+ * <summary>
+ * 	t_env	*ft_add_node(t_env *env, char *key, char *value)
+ * </summary>
+ *
+ * <description>
+ * 	ft_add_node add a new node on the linked list of environnement variables.
+ * </description>
+ *
+ * <param type="t_env *" name="env">linked list env</param>
+ *
+ * <return>
+ * 	NULL if problem or a pointer to the head of list.
+ * </return>
+ *
+ */
 
 t_env	*ft_add_node(t_env *env, char *key, char *value)
 {
@@ -41,6 +60,27 @@ t_env	*ft_add_node(t_env *env, char *key, char *value)
 	return (env);
 }
 
+/*
+ * <cat>minishell</cat>
+ *
+ * <summary>
+ * 	void	ft_init_env(t_env **env, char **envp)
+ * </summary>
+ *
+ * <description>
+ * 	ft_init_env initialise the linked list env with all value of environnement 
+ * 	variable.
+ * </description>
+ *
+ * <param type="t_env *" name="env">linked list env</param>
+ * <param type="char **" name="envp">array of env variables</param>
+ *
+ * <return>
+ * 	void.
+ * </return>
+ *
+ */
+
 void	ft_init_env(t_env **env, char **envp)
 {
 	char	**key_value;
@@ -57,11 +97,32 @@ void	ft_init_env(t_env **env, char **envp)
 	ft_update_shlvl(env);
 }
 
+/*
+ * <cat>minishell</cat>
+ *
+ * <summary>
+ * 	int	ft_env(t_data *data, t_env **env)
+ * </summary>
+ *
+ * <description>
+ * 	ft_env print all environnement variables on the linked list.
+ * 	variable.
+ * </description>
+ *
+ * <param type="t_data *" name="data">data struct</param>
+ * <param type="t_env *" name="env">linked list env</param>
+ *
+ * <return>
+ * 	0 if success or
+ * 	1 if error.
+ * </return>
+ *
+ */
+
 int	ft_env(t_data *data, t_env **env)
 {
 	char	*value;
 	char	**array;
-	int		index;
 	t_env	*current;
 
 	value = ft_get_env_value(*env, "PATH");
@@ -71,6 +132,12 @@ int	ft_env(t_data *data, t_env **env)
 		return (127);
 	}
 	array = ft_split(data->cmd, ' ');
+	if (array[1])
+	{
+		printf("%s: '%s' No such file or directory\n", array[0], array[1]);
+		ft_free_array(array);
+		return (127);
+	}
 	current = *env;
 	while (current)
 	{
@@ -78,9 +145,5 @@ int	ft_env(t_data *data, t_env **env)
 			printf("%s=%s\n", current->key, current->value);
 		current = current->next;
 	}
-	index = 0;
-	while (array[++index])
-		printf("%s: '%s' No such file or directory\n", array[0], array[index]);
-	ft_free_array(array);
-	return (0);
+	return (ft_free_array(array), 0);
 }
