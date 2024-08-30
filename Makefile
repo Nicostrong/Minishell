@@ -6,7 +6,7 @@
 #    By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/16 09:35:29 by nfordoxc          #+#    #+#              #
-#    Updated: 2024/08/28 09:43:21 by nfordoxc         ###   Luxembourg.lu      #
+#    Updated: 2024/08/30 09:02:12 by nfordoxc         ###   Luxembourg.lu      #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,12 +62,14 @@ MYLIBS_BONUS	=
 ################################################################################
 
 SRC				=	./src/main.c \
+					./src/ft_error.c \
 					./src/ft_builtin.c \
 					./src/ft_signal.c \
 					./src/builtin/ft_echo.c \
 					./src/builtin/ft_env.c \
 					./src/builtin/ft_env_utils.c \
 					./src/builtin/ft_export.c \
+					./src/builtin/ft_export_utils.c \
 					./src/builtin/ft_cd.c \
 					./src/builtin/ft_pwd.c \
 					./src/builtin/ft_unset.c \
@@ -120,7 +122,7 @@ BWHITE			=	'\033[1;97m'
 ################################################################################
 
 CURRENT_FILE	= 	0
-NB_SRC			=	8
+NB_SRC			=	11
 SLEEP_TIME		=	0.001
 
 ################################################################################
@@ -166,7 +168,7 @@ deb:		$(LIB_LIBFT_DIR)/libft.a \
 	$(DEB) $(DEB_OPT) ./$(NAME)
 
 clean:
-	@$(RM) src/*.o > /dev/null 2>&1
+	@$(RM) ./src/*.o > /dev/null 2>&1
 	@for i in $$(seq 100 -1 0); do \
 		printf "\r\033[K\033[0K"; \
 		if [ $$((i % 4)) -eq 0 ]; then \
@@ -184,7 +186,26 @@ clean:
 		printf " %d/100 ]$(RESET)" $$i; \
 		sleep $(SLEEP_TIME); \
 	done
-	@printf "\r\033[K\033[0K$(GREEN)All files *.o of $(NAME) deleted\n$(WITHE)"
+	@printf "\r\033[K\033[0K$(GREEN)All files ./src/*.o of $(NAME) deleted\n$(WITHE)"
+	@$(RM) ./src/builtin/*.o > /dev/null 2>&1
+	@for i in $$(seq 100 -1 0); do \
+		printf "\r\033[K\033[0K"; \
+		if [ $$((i % 4)) -eq 0 ]; then \
+			printf "$(BRED)DELETE - ["; \
+		elif [ $$((i % 4)) -eq 1 ]; then \
+			printf "$(BRED)DELETE / ["; \
+		elif [ $$((i % 4)) -eq 2 ]; then \
+			printf "$(BRED)DELETE | ["; \
+		else \
+			printf "$(BRED)DELETE \\ ["; \
+		fi; \
+		for j in $$(seq 0 $$i); do \
+			printf '='; \
+		done; \
+		printf " %d/100 ]$(RESET)" $$i; \
+		sleep $(SLEEP_TIME); \
+	done
+	@printf "\r\033[K\033[0K$(GREEN)All files ./src/builtin/*.o of $(NAME) deleted\n$(WITHE)"
 	@$(MAKE) -sC $(LIB_LIBFT_DIR) clean
 
 fclean: 	clean

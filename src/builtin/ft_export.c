@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 10:23:25 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/28 12:12:59 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/08/28 13:23:53 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,10 @@ static int	ft_print_export_env(t_env *env)
 	while (a_key[++index])
 	{
 		value = ft_get_env_value(env, a_key[index]);
-		printf("export %s=%s\n", a_key[index], value);
+		if (value)
+			printf("export %s=%s\n", a_key[index], value);
+		else
+			printf("export %s\n", a_key[index]);
 	}
 	ft_free_array(a_key);
 	return (0);
@@ -108,7 +111,10 @@ int	ft_export(t_data *data, t_env *env)
 	while (array[++index])
 	{
 		key_val = ft_split(array[index], '=');
-		ft_add_node(env, key_val[0], key_val[1]);
+		if (key_val[1])
+			ft_add_node(env, key_val[0], key_val[1]);
+		else
+			ft_add_node(env, key_val[0], NULL);
 		ft_free_array(key_val);
 	}
 	ft_free_array(array);

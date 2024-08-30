@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 10:24:30 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/28 10:18:00 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/08/28 13:51:55 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,14 @@ t_env	*ft_add_node(t_env *env, char *key, char *value)
 	node->key = ft_strdup(key);
 	if (!node->key)
 		return (free(node), NULL);
-	node->value = ft_strdup(value);
-	if (!node->value)
-		return (free(node->key), free(node), NULL);
+	if (value)
+	{
+		node->value = ft_strdup(value);
+		if (!node->value)
+			return (free(node->key), free(node), NULL);
+	}
+	else
+		node->value = NULL;
 	node->next = NULL;
 	if (!env)
 		return (node);
@@ -52,9 +57,11 @@ void	ft_init_env(t_env **env, char **envp)
 	ft_update_shlvl(env);
 }
 
-int	ft_env(t_env **env)
+int	ft_env(t_data *data, t_env **env)
 {
 	char	*value;
+	char	**array;
+	int		index;
 	t_env	*current;
 
 	value = ft_get_env_value(*env, "PATH");
@@ -63,11 +70,17 @@ int	ft_env(t_env **env)
 		printf(TERM_NAME": env: No such file or directory\n");
 		return (127);
 	}
+	array = ft_split(data->cmd, ' ');
 	current = *env;
 	while (current)
 	{
-		printf("%s=%s\n", current->key, current->value);
+		if (current->value)
+			printf("%s=%s\n", current->key, current->value);
 		current = current->next;
 	}
+	index = 0;
+	while (array[++index])
+		printf("%s: '%s' No such file or directory\n", array[0], array[index]);
+	ft_free_array(array);
 	return (0);
 }
