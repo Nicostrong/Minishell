@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 14:59:21 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/29 13:09:54 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/09 10:07:58 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
  * Bool functions
  */
 
+int			ft_issep(int c);
 int			ft_isalpha(int c);
 int			ft_isdigit(int c);
 int			ft_isalnum(int c);
@@ -69,6 +70,8 @@ int			ft_strncmp(const char *s1, const char *s2, size_t n);
 char		*ft_strdup(const char *s);
 char		*ft_strchr(const char *s, int c);
 char		*ft_strrchr(const char *s, int c);
+char		*ft_join_array(char **a_str, char *sep);
+char		*ft_strndup(const char *s, size_t nbr_char);
 char		*ft_strjoin(char const *s1, char const *s2);
 char		*ft_strtrim(char const *s1, char const *set);
 char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));

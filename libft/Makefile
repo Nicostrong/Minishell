@@ -6,7 +6,7 @@
 #    By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/19 13:47:49 by nfordoxc          #+#    #+#              #
-#    Updated: 2024/08/29 13:09:26 by nfordoxc         ###   Luxembourg.lu      #
+#    Updated: 2024/09/09 10:08:24 by nfordoxc         ###   Luxembourg.lu      #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,7 @@ SRC				=	ft_charchr.c \
 					ft_isascii.c \
 					ft_isprint.c \
 					ft_isint.c \
+					ft_issep.c \
 					ft_islowercase.c \
 					ft_isuppercase.c \
 					ft_strlen.c \
@@ -68,11 +69,13 @@ SRC				=	ft_charchr.c \
 					ft_atoll.c \
 					ft_calloc.c \
 					ft_strdup.c \
+					ft_strndup.c \
 					ft_substr.c \
 					ft_strarraycpy.c \
 					ft_strjoin.c \
 					ft_strtrim.c \
 					ft_split.c \
+					ft_join_array.c \
 					ft_itoa.c \
 					ft_strmapi.c \
 					ft_striteri.c \
@@ -139,7 +142,7 @@ BWHITE			=	'\033[1;97m'
 ################################################################################
 
 CURRENT_FILE	= 	0
-NB_SRC			=	54
+NB_SRC			=	57
 SLEEP_TIME		=	0.001
 
 ################################################################################

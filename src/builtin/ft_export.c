@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 10:23:25 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/30 08:53:42 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/08/30 16:06:15 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,9 +198,11 @@ static int	ft_print_export_env(t_env *env)
  *
  */
 
+
 int	ft_export(t_data *data, t_env *env)
 {
 	char	*key;
+	char	*value;
 	char	**array;
 	int		index;
 
@@ -208,17 +210,28 @@ int	ft_export(t_data *data, t_env *env)
 	if (!array)
 		return (1);
 	if (!array[1])
-		return (ft_free_array(array), ft_print_export_env(env));
+		return (ft_free_array(array), ft_print_export_env(env), 1);
 	index = 0;
 	while (array[++index])
 	{
 		key = ft_get_key(array[index]);
-		if (ft_check_key(env, key))
-			ft_update_key(&env, key, array[index]);
-		else
-			ft_export_value(&env, array[index]);
+		if (key)
+		{
+			value = ft_get_value(array[index]);
+			if (ft_check_key(env, key))
+				ft_set_env_value(&env, key, value);
+			else
+				ft_export_value(&env, array[index]);
 		free(key);
+		free(value);
+		}
 	}
 	ft_free_array(array);
 	return (0);
 }
+
+/*
+A TESTER / IMPLEMENTER
+export TOTO=		export la var TOTO avec la valeur ""
+export TOTO=$USER	export TOTO avec la valeur de USER
+export TOTO=$MERDE	export TOTO avec la valeur ""*/

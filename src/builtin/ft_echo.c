@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 09:55:36 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/27 13:28:58 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/05 17:32:41 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,9 @@ int	ft_echo(t_data *data, t_env *env)
 
 	(void)env;
 	opt = 0;
-	add_history(data->cmd);
-	array = ft_split(data->cmd, ' ');
+	array = ft_split(data->var_parse, ' ');
 	if (!array[1])
 	{
-		data->code_child = 0;
 		ft_putendl_fd("", 1);
 		return (0);
 	}
@@ -48,14 +46,7 @@ int	ft_echo(t_data *data, t_env *env)
 	{
 		while (array[++index])
 		{
-			/*if (array[index][0] == '$')
-			{
-				var = ft_get_env_value(env, array[index]);
-				printf("%s\n", var);
-				free(var);
-			}
-			else*/
-				ft_putstr_fd(array[index], 1);
+			ft_putstr_fd(array[index], 1);
 			if (array[index + 1])
 				ft_putchar_fd(' ', 1);
 		}
@@ -71,5 +62,7 @@ int	ft_echo(t_data *data, t_env *env)
 		ft_putchar_fd('\n', 1);
 	}
 	ft_free_array(array);
+	//ft_parse_echo(data, env);
+	//ft_putendl_fd(data->echo_parse, 1);
 	return (0);
 }

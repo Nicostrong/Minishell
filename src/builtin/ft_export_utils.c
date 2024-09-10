@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 12:07:18 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/30 09:27:58 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/08/30 15:48:56 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,32 +16,40 @@
  * <cat>minishell</cat>
  *
  * <summary>
- * 	int	ft_get_key(char *key_value)
+ * 	char	*ft_get_value(char *key_value)
  * </summary>
  *
  * <description>
- * 	ft_get_key get the first part of the string formated like "key=value".
+ * 	ft_get_value get the value of the string formated like key=value.
  * </description>
  *
  * <param type="char *" name="key_value">string with key and value</param>
  *
  * <return>
- * 	a new pointer to the key.
+ *  a pointer to a sting with the value.
  * </return>
  *
  */
 
-char	*ft_update_key(char *key_value)
+char	*ft_get_value(char *key_value)
 {
-	char	*key;
-	char	**a_key_value;
-	
+	char	*value;
+	int		index_sep;
+
 	if (!key_value)
 		return (NULL);
-	a_key_value = ft_split(key_value, '=');
-	key = ft_strdup(a_key_value[0]);
-	ft_free_array(a_key_value);
-	return (key);
+	index_sep = 0;
+	index_sep = ft_charchr(key_value, '=');
+	value = ft_substr(key_value, ++index_sep, ft_strlen(key_value));
+	return (value);
+}
+
+int	ft_valid_key(char *key)
+{
+	if (ft_isalpha(key[0]) || key[0] == '_')
+		return (1);
+	ft_put_error_arg("export", key, "not a valid identifier");
+	return (0);
 }
 
 /*
@@ -73,7 +81,10 @@ char	*ft_get_key(char *key_value)
 	a_key_value = ft_split(key_value, '=');
 	key = ft_strdup(a_key_value[0]);
 	ft_free_array(a_key_value);
-	return (key);
+	if (ft_valid_key(key))
+		return (key);
+	free(key);
+	return (NULL);
 }
 
 /*
@@ -133,7 +144,6 @@ void	ft_export_value(t_env **env, char *key_val)
 	char	*a_k_v[2];
 
 	a_key_val = ft_split(key_val, '=');
-	ft_putstrarray(a_key_val);
 	if (a_key_val[2])
 	{
 		a_k_v[0] = ft_substr(key_val, 0, ft_charchr(key_val, '='));

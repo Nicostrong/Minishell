@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:49:15 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/06/17 11:08:33 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/06 10:03:38 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ char	*ft_itoa(int n)
 	nbr = (long long)n;
 	if (n < 0)
 		nbr *= -1;
-	ret = (char *)malloc(sizeof(char) * (len + 1));
+	ret = (char *)ft_calloc((len + 1), sizeof(char));
 	if (!ret)
 		return (NULL);
 	ret[len--] = '\0';

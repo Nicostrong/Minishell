@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 08:26:04 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/29 10:36:17 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/05 10:25:53 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,44 @@ void	ft_set_env_value(t_env **env, char *key, char *value)
  * <cat>minishell</cat>
  *
  * <summary>
+ * 	int	ft_is_key(t_env *env, const char *key)
+ * </summary>
+ *
+ * <description>
+ * 	ft_is_key is bool function return 1 if key is on env or 0 if not.
+ * </description>
+ *
+ * <param type="t_env *" name="env">linked list env</param>
+ * <param type="char *" name="key">key to fund</param>
+ *
+ * <return>
+ * 	1 if key exist or 0 if not exist.
+ * </return>
+ *
+ */
+
+int	ft_is_key(t_env *env, char *key)
+{
+	t_env	*current;
+
+	if (!env || !key)
+		return (0);
+	if (key[0] == '$')
+		key++;
+	current = env;
+	while (current)
+	{
+		if (ft_strequal(current->key, key))
+			return (1);
+		current = current->next;
+	}
+	return (0);
+}
+
+/*
+ * <cat>minishell</cat>
+ *
+ * <summary>
  * 	char	*ft_get_env_value(t_env *env, const char *key)
  * </summary>
  *
@@ -79,6 +117,8 @@ char	*ft_get_env_value(t_env *env, char *key)
 
 	if (!env || !key)
 		return (NULL);
+	if (key[0] == '$')
+		key++;
 	current = env;
 	while (current)
 	{

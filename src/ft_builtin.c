@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 14:52:43 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/29 11:15:18 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/08/30 14:29:55 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	ft_builtin(t_data *data, t_env **env)
 		ft_exit(data, env);
 	else
 	{
-		ft_print_error(a_cmd[0]);
+		ft_put_error_cmd(a_cmd[0], "command not fund.");
 		data->code_child = 127;
 	}
 	ft_free_array(a_cmd);

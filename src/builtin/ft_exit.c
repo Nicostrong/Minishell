@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 10:24:40 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/29 10:44:43 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/05 17:24:10 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,10 @@ static void	ft_free_data(t_data *data)
 		return ;
 	if (data->cmd)
 		free(data->cmd);
+	if (data->var_parse)
+		free(data->var_parse);
+	if (data->echo_parse)
+		free(data->echo_parse);
 }
 
 /*
@@ -63,7 +67,8 @@ static void	ft_free_data(t_data *data)
 
 int	ft_exit(t_data *data, t_env **env)
 {
-	rl_clear_history();
+	//rl_clear_history();
+	clear_history();	// TO REMOVE FOR LINUX
 	ft_free_data(data);
 	ft_free_env(*env);
 	exit(EXIT_SUCCESS);

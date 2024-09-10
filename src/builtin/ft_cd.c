@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 10:22:28 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/29 10:31:13 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/08/30 14:03:03 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,7 @@ static int	ft_go_home(t_env **env)
 
 	home = ft_get_env_value(*env, "HOME");
 	if (!home || chdir(home) == -1)
-	{
-		printf(TERM_NAME": cd: HOME not set\n");
-		return (1);
-	}
+		ft_put_error_cmd_exit("cd", "HOME not set", 1);
 	oldpwd = ft_get_env_value(*env, "PWD");
 	ft_set_env_value(env, "OLDPWD", oldpwd);
 	ft_set_env_value(env, "PWD", home);
@@ -82,8 +79,9 @@ static int	ft_go_back(t_env **env, char **array)
 	old_pwd = ft_strdup(ft_get_env_value(*env, "OLDPWD"));
 	if (!old_pwd || chdir(old_pwd) == -1)
 	{
-		printf(TERM_NAME": cd: OLDPWD not set\n");
-		return (free(pwd), free(old_pwd), 1);
+		free(pwd);
+		free(old_pwd);
+		ft_put_error_cmd_exit("cd", "OLDPWD not set", 1);
 	}
 	printf("%s\n", old_pwd);
 	ft_set_env_value(env, "OLDPWD", pwd);
@@ -156,8 +154,7 @@ int	ft_cd(t_data *data, t_env **env)
 	if (array[1] && array[2])
 	{
 		ft_free_array(array);
-		ft_putendl_fd(TERM_NAME": cd: too many arguments", 2);
-		return (1);
+		ft_put_error_cmd_exit(array[0], "too many arguments", 1);
 	}
 	else if (!array[1] || ft_strequal(array[1], "~")
 		|| ft_strequal(array[1], "--"))

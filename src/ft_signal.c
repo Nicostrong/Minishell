@@ -6,11 +6,13 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 13:12:26 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/28 15:23:24 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/05 17:37:49 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+int	g_status;
 
 /*
  * <cat>minishell</cat>
@@ -35,9 +37,10 @@ void	handle_signal(int sign)
 {
 	if (sign == SIGINT)
 	{
-		printf("\n");
+		g_status = 130;
+		ioctl(STDIN_FILENO, TIOCSTI, "\n");
+		// rl_replace_line("", 0);
 		rl_on_new_line();
-		rl_replace_line("", 0);
 		rl_redisplay();
 	}
 	else if (sign == SIGQUIT)
