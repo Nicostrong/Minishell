@@ -2,6 +2,8 @@
 ./a.out
 *.swp
 *.o
+*.a
+./*/*.a
 ./*/*.o
 ./*.o
 *.DS_Store

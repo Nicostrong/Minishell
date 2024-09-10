@@ -6,7 +6,7 @@
 #    By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/16 09:35:29 by nfordoxc          #+#    #+#              #
-#    Updated: 2024/08/30 09:02:12 by nfordoxc         ###   Luxembourg.lu      #
+#    Updated: 2024/09/10 09:23:56 by nfordoxc         ###   Luxembourg.lu      #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,6 +65,7 @@ SRC				=	./src/main.c \
 					./src/ft_error.c \
 					./src/ft_builtin.c \
 					./src/ft_signal.c \
+					./src/ft_wilcard.c \
 					./src/builtin/ft_echo.c \
 					./src/builtin/ft_env.c \
 					./src/builtin/ft_env_utils.c \
@@ -73,7 +74,10 @@ SRC				=	./src/main.c \
 					./src/builtin/ft_cd.c \
 					./src/builtin/ft_pwd.c \
 					./src/builtin/ft_unset.c \
-					./src/builtin/ft_exit.c
+					./src/builtin/ft_exit.c \
+					./src/tokennizer/ft_parse_2.c \
+					./src/tokennizer/ft_tree.c \
+					./src/tokennizer/ft_token.c
 
 OBJ				=	$(SRC:.c=.o)
 
@@ -122,8 +126,30 @@ BWHITE			=	'\033[1;97m'
 ################################################################################
 
 CURRENT_FILE	= 	0
-NB_SRC			=	11
+NB_SRC			=	16
 SLEEP_TIME		=	0.001
+
+define delete_progress
+	@$(RM) $(1) > /dev/null 2>&1
+	@for i in $$(seq 100 -1 0); do \
+		printf "\r\033[K\033[0K"; \
+		if [ $$((i % 4)) -eq 0 ]; then \
+			printf "$(BRED)DELETE - ["; \
+		elif [ $$((i % 4)) -eq 1 ]; then \
+			printf "$(BRED)DELETE / ["; \
+		elif [ $$((i % 4)) -eq 2 ]; then \
+			printf "$(BRED)DELETE | ["; \
+		else \
+			printf "$(BRED)DELETE \\ ["; \
+		fi; \
+		for j in $$(seq 0 $$i); do \
+			printf '='; \
+		done; \
+		printf " %d/100 ]$(RESET)" $$i; \
+		sleep $(SLEEP_TIME); \
+	done
+	@printf "\r\033[K\033[0K$(GREEN)All files $(1) of $(NAME) deleted\n$(WITHE)"
+endef
 
 ################################################################################
 #	Rules																	   #
@@ -168,44 +194,10 @@ deb:		$(LIB_LIBFT_DIR)/libft.a \
 	$(DEB) $(DEB_OPT) ./$(NAME)
 
 clean:
-	@$(RM) ./src/*.o > /dev/null 2>&1
-	@for i in $$(seq 100 -1 0); do \
-		printf "\r\033[K\033[0K"; \
-		if [ $$((i % 4)) -eq 0 ]; then \
-			printf "$(BRED)DELETE - ["; \
-		elif [ $$((i % 4)) -eq 1 ]; then \
-			printf "$(BRED)DELETE / ["; \
-		elif [ $$((i % 4)) -eq 2 ]; then \
-			printf "$(BRED)DELETE | ["; \
-		else \
-			printf "$(BRED)DELETE \\ ["; \
-		fi; \
-		for j in $$(seq 0 $$i); do \
-			printf '='; \
-		done; \
-		printf " %d/100 ]$(RESET)" $$i; \
-		sleep $(SLEEP_TIME); \
-	done
-	@printf "\r\033[K\033[0K$(GREEN)All files ./src/*.o of $(NAME) deleted\n$(WITHE)"
-	@$(RM) ./src/builtin/*.o > /dev/null 2>&1
-	@for i in $$(seq 100 -1 0); do \
-		printf "\r\033[K\033[0K"; \
-		if [ $$((i % 4)) -eq 0 ]; then \
-			printf "$(BRED)DELETE - ["; \
-		elif [ $$((i % 4)) -eq 1 ]; then \
-			printf "$(BRED)DELETE / ["; \
-		elif [ $$((i % 4)) -eq 2 ]; then \
-			printf "$(BRED)DELETE | ["; \
-		else \
-			printf "$(BRED)DELETE \\ ["; \
-		fi; \
-		for j in $$(seq 0 $$i); do \
-			printf '='; \
-		done; \
-		printf " %d/100 ]$(RESET)" $$i; \
-		sleep $(SLEEP_TIME); \
-	done
-	@printf "\r\033[K\033[0K$(GREEN)All files ./src/builtin/*.o of $(NAME) deleted\n$(WITHE)"
+	$(call delete_progress, ./src/*.o)
+	$(call delete_progress, ./src/builtin/*.o)
+	$(call delete_progress, ./src/tokennizer/*.o)
+	$(call delete_progress, ./src/pipex/*.o)
 	@$(MAKE) -sC $(LIB_LIBFT_DIR) clean
 
 fclean: 	clean
@@ -600,3 +592,4 @@ nico:
 	@echo ". ... . .. ... .... .... ..... ... ....... ...... .. ..... ."
 	@echo ". ....  .. ....    ......     ....     ... ...... ..      .."
 	@echo "............................................................"
+
