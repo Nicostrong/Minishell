@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:41:47 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/10 09:25:02 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/11 13:11:33 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,6 @@
  *		- exit without options;
  *	Minishell is available to interpret :
  *		- multiple pipi;
- *		- ", ', (, ), <, <<, >, >>, &&, ||;
- *		- ctrl + c => displays a new prompt on a new line;
- *		- ctrl + D => exits the shell;
- *		- ctrl + \ => does nothing;
- *		- $ENV_VARIABLE;
  *	It've got a history commands.
  * </description>
  *
@@ -76,7 +71,7 @@ int main(int argc, char **argv, char **envp)
 			add_history(line);
 			ft_wilcard("*");
 			//ft_parse(&data, env, line);
-			//ft_parse_cmd(&data, env);
+			ft_parse_cmd(&data, env);
 			ft_builtin(&data, &env);
 			//free(data.cmd);
 			char **tokens;
@@ -90,8 +85,7 @@ int main(int argc, char **argv, char **envp)
 		free(data.cmd);
 		free(data.var_parse);
 	}
-}
-*/
+}*/
 
 int	main(void)
 {
@@ -99,7 +93,9 @@ int	main(void)
     t_token	*tokens;
 	t_tree	*tree;
 
-	command = "(echo $USER && echo $HOME) | /bin/cat < input | /usr/bin/grep \"toto\" | /bin/wc -l >> out";
+	//command = "(echo $USER && echo $HOME) | /bin/cat < input | /usr/bin/grep \"toto\" | /bin/wc -l >> out";
+	//command = "/bin/cat < input | /usr/bin/grep \"toto\" | /bin/wc -l >> out";
+	command = "<< EOF cat | wc -l > out";
 	tokens = ft_parse_cmd(command);
 	tree = ft_parse_token_to_tree(&tokens);
     
@@ -109,7 +105,7 @@ int	main(void)
 
 	// Affichage de l arbre
 	printf("Arbre de la commande :\n");
-    ft_print_tree(tree);
+    ft_print_tree(tree, 0);
 	//(void)tree;
     return 0;
 }
