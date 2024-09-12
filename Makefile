@@ -6,7 +6,7 @@
 #    By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/16 09:35:29 by nfordoxc          #+#    #+#              #
-#    Updated: 2024/09/10 09:23:56 by nfordoxc         ###   Luxembourg.lu      #
+#    Updated: 2024/09/12 14:56:42 by nfordoxc         ###   Luxembourg.lu      #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,6 +77,8 @@ SRC				=	./src/main.c \
 					./src/builtin/ft_exit.c \
 					./src/tokennizer/ft_parse_2.c \
 					./src/tokennizer/ft_tree.c \
+					./src/tokennizer/ft_free_tree_tokens.c \
+					./src/tokennizer/ft_tree_utils.c \
 					./src/tokennizer/ft_token.c
 
 OBJ				=	$(SRC:.c=.o)
@@ -126,7 +128,7 @@ BWHITE			=	'\033[1;97m'
 ################################################################################
 
 CURRENT_FILE	= 	0
-NB_SRC			=	16
+NB_SRC			=	19
 SLEEP_TIME		=	0.001
 
 define delete_progress
