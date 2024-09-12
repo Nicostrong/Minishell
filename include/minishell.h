@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:46:06 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/09 21:50:44 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/12 15:02:58 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,30 @@
 # define TERM_NAME	BLUE"minishell"WHITE
 
 /*
+ *	Externe variable
+ */
+
+extern char	**environ;
+
+/*
+ *	Global variable
+ */
+
+extern int	g_status;
+
+/*
  *	Standart library
  */
 
 # include <stdlib.h>
 # include <stdio.h>
 # include <unistd.h>
+# include <fcntl.h>
 # include <termios.h>
 # include <signal.h>
 # include <dirent.h>
 # include <sys/ioctl.h>
+# include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -73,6 +87,13 @@ typedef enum
  *	Structure
  */
 
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
+
 typedef struct s_token
 {
 	e_token			type;
@@ -89,12 +110,29 @@ typedef struct s_tree
 	struct s_tree	*next;		//	next commande (voir pour le noeud parent)
 }	t_tree;
 
-typedef struct s_env
+typedef struct s_pipex
 {
-	char			*key;
-	char			*value;
-	struct s_env	*next;
-}	t_env;
+	int		nb_cmd;
+	int		fd_in;
+	int		fd_out;
+	int		here_doc;
+	char	*limiter;
+	char	*file_in;
+	char	*file_out;
+	char	**path_array;
+	char	**cmd_opt_array;
+	char	**cmd_array;
+	char	**access_path;
+}	t_pipex;
+
+typedef struct s_minishell
+{
+	t_env	*l_env;		// Liste chaînée des variables d'environnement
+	t_token	*l_token;	// Liste chaînée des tokens de commande
+	t_tree	*tree;		// Racine de l'arbre AST pour les commandes
+	t_pipex	*pipex;		// Informations pour l'exécution de Pipex
+	int		code_exit;	// Code retour last process
+}   t_shell;
 
 typedef struct s_data
 {
@@ -104,30 +142,6 @@ typedef struct s_data
 	char	*echo_parse;	// array de string a afficher avec les valeur de $VAR si entre \" ou sans \' et \"
 	int		code_child;		// Code retour de la derniere commande
 }	t_data;
-
-typedef struct s_cmd
-{
-	char			*cmd;			// Nom de la commande
-	char			**args;			// Tableau d'arguments (la commande et ses arguments)
-	char			*input_file;	// Fichier d'entrée pour la redirection (NULL si non utilisé)
-	char			*output_file;	// Fichier de sortie pour la redirection (NULL si non utilisé)
-	int				append_output;	// 1 si on utilise '>>', 0 pour '>'
-	int				is_piped;		// 1 si la commande est en pipeline, 0 sinon
-	int				is_and;			// 1 si la commande est suivie par &&
-	int				is_or;			// 1 si la commande est suivie par ||
-	int				is_subshell;	// 1 si la commande est une sous-shell (parenthèses)
-	int				is_dir;			// 1 si c est un dossier
-	int				is_file;		// 1 si c est un fichier
-	struct s_cmd	*next;			// Commande suivante dans le pipeline
-}	t_cmd;
-
-typedef struct s_shell
-{
-	t_env	*env;        // Liste chaînée des variables d'environnement
-	char	**history;   // Tableau pour stocker l'historique des commandes
-	int     exit_code;   // Code de retour de la dernière commande exécutée
-	int     running;     // Flag pour savoir si le shell doit continuer à fonctionner
-}	t_shell;
 
 /*
  *	Buildin
@@ -148,11 +162,10 @@ int			ft_env(t_data *data, t_env **env);
 
 char		*ft_get_env_value(t_env *env, char *key);
 
-void		ft_free_env(t_env *env);
 void		ft_update_shlvl(t_env **env);
-void		ft_init_env(t_env **env, char **envp);
 void		ft_set_env_value(t_env **env, char *key, char *value);
 
+t_env		*ft_init_env(void);
 t_env		*ft_add_node(t_env *env, char *key, char *value);
 
 	/*
@@ -202,8 +215,17 @@ char		*ft_get_token_name(e_token token);
 t_token		*ft_parse_cmd(char *input);
 
 t_tree		*ft_parse_token_to_tree(t_token **tokens);
+t_tree		*ft_handle_var(t_token **cur, t_tree **parent_node);
+t_tree		*ft_handle_pipe_or_and(t_token **cur, t_tree **head);
+t_tree		*ft_handle_file(t_token **cur, t_tree **parent_node);
+t_tree		*ft_handle_quote(t_token **cur, t_tree **parent_node);
+t_tree		*ft_handle_option(t_token **cur, t_tree **parent_node);
+t_tree		*ft_handle_cmd(t_token **cur, t_tree **head, t_tree **parent_node);
+t_tree		*ft_handle_sub(t_token **cur, t_tree **head, t_tree **parent_node);
+
+void		ft_free_all(t_shell *shell);
 void		ft_print_tokens(t_token *tokens);	// pour debug
-void		ft_print_tree(t_tree *node);		// pour debug
+void		ft_print_tree(t_tree *node, int depth);		// pour debug
 
 //void		ft_parse_cmd(t_data *data, t_env *env);
 //void		ft_parse_echo(t_data *data, t_env *env);
@@ -226,5 +248,15 @@ void		ft_put_error_cmd(char *cmd, char *msg);
 void		ft_put_error_arg(char *cmd, char *arg, char *msg);
 void		ft_put_error_cmd_exit(char *cmd, char *msg, int e_code);
 void		ft_put_error_arg_exit(char *cmd, char *arg, char *msg, int e_code);
+
+/*
+ *	free
+ */
+
+void		ft_free_env(t_env *env);
+void		ft_free_tree(t_tree *tree);
+void		ft_free_all(t_shell *shell);
+void		ft_free_pipex(t_pipex *pipex);
+void		ft_free_tokens(t_token *tokens);
 
 #endif

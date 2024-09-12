@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:46:48 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/09 09:58:27 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/11 14:44:18 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,9 @@ void	ft_append_token(t_token **head, e_token type, char *value)
 	t_token	*current;
 
 	new = ft_create_token(type, value);
-	if (!head || !*head)
+	if (!head)
+		return ;
+	if (!*head)
 		*head = new;
 	else
 	{

@@ -6,20 +6,60 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:41:47 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/11 13:11:33 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/12 15:26:46 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-/*static void	ft_init_data(t_data *data)
+int	g_status = 0;
+
+static t_pipex	*ft_init_pipex(t_shell **shell)
 {
-	data->cmd = NULL;
-	data->echo_parse = NULL;
-	data->export_parse = NULL;
-	data->var_parse = NULL;
-	data->code_child = -1;
-}*/
+	t_pipex	*pipex;
+
+	pipex = (t_pipex *)ft_calloc(1, sizeof(t_pipex));
+	if (!pipex)
+	{
+		free(*shell);
+		exit (EXIT_FAILURE);
+	}
+	pipex->nb_cmd = 0;
+	pipex->fd_in = -1;
+	pipex->fd_out = -1;
+	pipex->here_doc = 0;
+	pipex->limiter = NULL;
+	pipex->file_in = NULL;
+	pipex->file_out = NULL;
+	pipex->path_array = NULL;
+	pipex->cmd_opt_array = NULL;
+	pipex->cmd_array = NULL;
+	pipex->access_path = NULL;
+	return (pipex);
+}
+
+static t_shell	*ft_init_shell(void)
+{
+	t_shell	*shell;
+
+	shell = (t_shell *)ft_calloc(1, sizeof(t_shell));
+	if (!shell)
+		exit (EXIT_FAILURE);
+	shell->l_env = ft_init_env();
+	shell->l_token = NULL;
+	shell->tree = NULL;
+	shell->pipex = ft_init_pipex(&shell);
+	shell->code_exit = 0;
+	return (shell);
+}
+
+static void	ft_print_all(t_shell *shell)
+{
+	printf("Tokens de la commande :\n");
+	ft_print_tokens(shell->l_token);
+	printf("Arbre de la commande :\n");
+    ft_print_tree(shell->tree, 0);
+}
 
 /*
  * <cat>minishell</cat>
@@ -90,22 +130,44 @@ int main(int argc, char **argv, char **envp)
 int	main(void)
 {
 	char	*command;
-    t_token	*tokens;
-	t_tree	*tree;
+	t_shell	*shell;
 
 	//command = "(echo $USER && echo $HOME) | /bin/cat < input | /usr/bin/grep \"toto\" | /bin/wc -l >> out";
-	//command = "/bin/cat < input | /usr/bin/grep \"toto\" | /bin/wc -l >> out";
-	command = "<< EOF cat | wc -l > out";
-	tokens = ft_parse_cmd(command);
-	tree = ft_parse_token_to_tree(&tokens);
-    
-    // Affichage des tokens
-	printf("command = %s\n", command);
-	ft_print_tokens(tokens);
-
-	// Affichage de l arbre
-	printf("Arbre de la commande :\n");
-    ft_print_tree(tree, 0);
-	//(void)tree;
-    return 0;
+	command = "/bin/cat < input | /usr/bin/grep \"toto\" | /bin/wc -l >> out";
+	//command = "<< EOF /bin/cat | wc -l > out";
+	//command = "(echo \"$USER\" && /bin/cd ~/projects && ls -la * | /bin/grep \"./*.c$\") | /bin/wc -l >> output.txt 2>&1";
+	//command = "(echo \"Hello $USER\" && /bin/cat < input.txt | /bin/grep -i \"pattern\" || echo 'No match found') | /bin/ls -la | /bin/wc -l >> count.log && /bin/tail -f output.log";
+	shell = ft_init_shell();
+	signal(SIGINT, handle_signal);
+	signal(SIGQUIT, SIG_IGN);
+	while (g_status != -1)
+	{
+		command = readline(TERM_NAME"$ ");
+		if (ft_strlen(command))
+		{
+			add_history(command);
+			shell->l_token = ft_parse_cmd(command);
+			shell->tree = ft_parse_token_to_tree(&shell->l_token);
+			ft_print_all(shell);
+			if (ft_strequal(command, "exit"))
+			{
+				ft_free_all(shell);
+				exit (EXIT_SUCCESS);
+			}
+			ft_free_tokens(shell->l_token);
+			ft_free_tree(shell->tree);
+		}
+		if (!command)
+		{
+			printf("exit\n");
+			rl_clear_history();
+			ft_free_all(shell);
+			exit (EXIT_SUCCESS);
+		}
+		free(command);
+	}
+	printf("exit\n");
+	rl_clear_history();
+	ft_free_all(shell);
+	exit (EXIT_SUCCESS);
 }

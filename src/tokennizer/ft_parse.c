@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 13:08:20 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/10 09:35:23 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/11 14:44:43 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ char	**ft_parse_input(char *input)
 *	parse la commande d entree et remplace toutes les variables $VAR par leur valeur
 */
 
-void	ft_parse_cmd(t_data *data, t_env *env)
+void	ft_parse_cmd2(t_data *data, t_env *env)
 {
 	char	*var;
 	char	**a_cmd;

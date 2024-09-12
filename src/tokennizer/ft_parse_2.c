@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:08:59 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/10 10:25:53 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/11 15:04:00 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,7 @@ static int	ft_isvarchar(char c)
 t_token	*ft_parse_cmd(char *input)
 {
 	t_token	*tokens;
-	char	*filename;
-	char	*quote_value;
-	char	*word;
-	char	*var_name;
-	char	*limiter;
-	char	*opt;
-	char	*wilcard;
+	char	*value;
 	char	quote;
 	int		i;
 	int		len_input;
@@ -34,6 +28,7 @@ t_token	*ft_parse_cmd(char *input)
 
 	tokens = NULL;
 	i = 0;
+	start = 0;
 	len_input = ft_strlen(input);
 	while (i < len_input)
 	{
@@ -74,23 +69,33 @@ t_token	*ft_parse_cmd(char *input)
 				while (i < len_input && ft_issep(input[i]))
 					i++;
 				start = i;
-				limiter = ft_strndup(&input[start], i - start);
-				ft_append_token(&tokens, T_EOF, limiter);
-				free(limiter);
+				while (i < len_input && !ft_issep(input[i]))
+					i++;
+				value = ft_strndup(&input[start], i - start);
+				ft_append_token(&tokens, T_EOF, value);
+				free(value);
+				while (i < len_input && ft_issep(input[i]))
+					i++;
+				start = i;
+				while (i < len_input && !ft_issep(input[i]))
+					i++;
+				value = ft_strndup(&input[start], i - start);
+				ft_append_token(&tokens, T_CMD, value);
+				free(value);
 			}
 			else
 			{
 				ft_append_token(&tokens, T_F_IN, "<");
 				i++;
+				while (i < len_input && ft_issep(input[i]))
+					i++;
+				start = i;
+				while (i < len_input && !ft_issep(input[i]))
+					i++;
+				value = ft_strndup(&input[start], i - start);
+				ft_append_token(&tokens, T_FILENAME, value);
+				free(value);
 			}
-			while (i < len_input && ft_issep(input[i]))
-				i++;
-			start = i;
-			while (i < len_input && !ft_issep(input[i]))
-				i++;
-			filename = ft_strndup(&input[start], i - start);
-			ft_append_token(&tokens, T_FILENAME, filename);
-			free(filename);
 		}
 		else if (input[i] == '>')
 		{
@@ -109,9 +114,9 @@ t_token	*ft_parse_cmd(char *input)
 			start = i;
 			while (i < len_input && !ft_issep(input[i]))
 				i++;
-			filename = ft_strndup(&input[start], i - start);
-			ft_append_token(&tokens, T_FILENAME, filename);
-			free(filename);
+			value = ft_strndup(&input[start], i - start);
+			ft_append_token(&tokens, T_FILENAME, value);
+			free(value);
 		}
 		else if (input[i] == '(')
 		{
@@ -131,15 +136,15 @@ t_token	*ft_parse_cmd(char *input)
 				i++;
 			if (i < len_input)
 			{
-				quote_value = ft_strndup(&input[start], i - start);
-				ft_append_token(&tokens, T_SQUOTE, quote_value);
-				free(quote_value);
+				value = ft_strndup(&input[start], i - start);
+				ft_append_token(&tokens, T_SQUOTE, value);
+				free(value);
 				i++;
 			}
 			else
 			{
 				printf("Erreur : guillemet simple non fermé\n");
-				break;
+				exit (EXIT_FAILURE);
 			}
 		}
 		else if (input[i] == '"')
@@ -150,15 +155,15 @@ t_token	*ft_parse_cmd(char *input)
 				i++;
 			if (i < len_input)
 			{
-				quote_value = ft_strndup(&input[start], i - start);
-				ft_append_token(&tokens, T_DQUOTE, quote_value);
-				free(quote_value);
+				value = ft_strndup(&input[start], i - start);
+				ft_append_token(&tokens, T_DQUOTE, value);
+				free(value);
 				i++;
 			}
 			else
 			{
 				printf("Erreur : guillemet double non fermé\n");
-				break;
+				exit (EXIT_FAILURE);
 			}
 		}
 		else if (input[i] == '$')
@@ -167,27 +172,27 @@ t_token	*ft_parse_cmd(char *input)
 			start = ++i;
 			while (i < len_input && ft_isvarchar(input[i]))
 				i++;
-			var_name = ft_strndup(&input[start], i - start);
-			ft_append_token(&tokens, T_KEY, var_name);
-			free(var_name);
+			value = ft_strndup(&input[start], i - start);
+			ft_append_token(&tokens, T_KEY, value);
+			free(value);
 		}
 		else if (input[i] == '*')
 		{
 			start = ++i;
 			while (i < len_input && ft_issep(input[i]))
 				i++;
-			wilcard = ft_strndup(&input[start], i - start);
-			ft_append_token(&tokens, T_WILDCARD, wilcard);
-			free(wilcard);
+			value = ft_strndup(&input[start], i - start);
+			ft_append_token(&tokens, T_WILDCARD, value);
+			free(value);
 		}
 		else if (input[i] == '-')
 		{
 			start = i;
 			while (i < len_input && !ft_issep(input[i]))
 				i++;
-			opt = ft_strndup(&input[start], i - start);
-			ft_append_token(&tokens, T_OPT, opt);
-			free(opt);
+			value = ft_strndup(&input[start], i - start);
+			ft_append_token(&tokens, T_OPT, value);
+			free(value);
 		}
 		else
 		{
@@ -199,16 +204,16 @@ t_token	*ft_parse_cmd(char *input)
 				input[i] != '\'' && input[i] != '"' &&
 				input[i] != '$' && input[i] != '*')
 				i++;
-			word = ft_strndup(&input[start], i - start);
-			if (ft_strequal(word, "echo") || ft_strequal(word, "cd") ||
-				ft_strequal(word, "env") || ft_strequal(word, "export") ||
-				ft_strequal(word, "unset") || ft_strequal(word, "exit"))
-				ft_append_token(&tokens, T_BUILTIN, word);
-			else if (ft_strchr(word, '/'))	// || on arrive a executer le binaire => pipex ft_get_access
-				ft_append_token(&tokens, T_CMD, word);
+			value = ft_strndup(&input[start], i - start);
+			if (ft_strequal(value, "echo") || ft_strequal(value, "cd") ||
+				ft_strequal(value, "env") || ft_strequal(value, "export") ||
+				ft_strequal(value, "unset") || ft_strequal(value, "exit"))
+				ft_append_token(&tokens, T_BUILTIN, value);
+			else if (ft_strchr(value, '/'))	// || on arrive a executer le binaire => pipex ft_get_access
+				ft_append_token(&tokens, T_CMD, value);
 			else
-				ft_append_token(&tokens, T_WORD, word);
-			free(word);
+				ft_append_token(&tokens, T_WORD, value);
+			free(value);
 		}
 	}
 	return (tokens);
@@ -231,6 +236,7 @@ char	*ft_get_token_name(e_token token)
 		case T_AND: return "T_AND";
 		case T_F_IN: return "T_F_IN";
 		case T_HEREDOC: return "T_HEREDOC";
+		case T_EOF: return "T_EOF";
 		case T_F_OUT: return "T_F_OUT";
 		case T_F_OUT_APPEND: return "T_F_OUT_APPEND";
 		case T_FILENAME: return "T_FILENAME";

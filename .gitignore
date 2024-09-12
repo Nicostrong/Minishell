@@ -1,13 +1,53 @@
+# executable
 ./a
+./../a
+./../../a
+./../../../a
+
+# executable
 ./a.out
+./../a
+./../../a.out
+./../../../a.out
+
+# temfile vim
 *.swp
+./*.swp
+./../*.swp
+./../../*.swp
+./../../../*.swp
+
+# object files
 *.o
-*.a
-./*/*.a
-./*/*.o
 ./*.o
+./../*.o
+./../../*.o
+./../../../*.o
+
+# library files
+*.a
+./*.a
+./../*.a
+./../../*.a
+./../../../*.a
+
+# save files
 *.DS_Store
-.vscode/
-../*/.vscode/
-../*/.idea/
-.idea/
+./*.DS_Store
+./../*.DS_Store
+./../../*.DS_Store
+./../../../*.DS_Store
+
+# vscode config
+.vscode
+./.vscode
+./../.vscode
+./../../.vscode
+./../../../.vscode
+
+# clion config
+.idea
+./.idea
+./../.idea
+./../../.idea
+./../../../.idea

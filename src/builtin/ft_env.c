@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 10:24:30 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/29 10:44:00 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/12 11:24:21 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ t_env	*ft_add_node(t_env *env, char *key, char *value)
  * <cat>minishell</cat>
  *
  * <summary>
- * 	void	ft_init_env(t_env **env, char **envp)
+ * 	t_env	*ft_init_env(void)
  * </summary>
  *
  * <description>
@@ -72,29 +72,28 @@ t_env	*ft_add_node(t_env *env, char *key, char *value)
  * 	variable.
  * </description>
  *
- * <param type="t_env *" name="env">linked list env</param>
- * <param type="char **" name="envp">array of env variables</param>
- *
  * <return>
  * 	void.
  * </return>
  *
  */
 
-void	ft_init_env(t_env **env, char **envp)
+t_env	*ft_init_env(void)
 {
 	char	**key_value;
 	int		index;
+	t_env	*env;
 
+	env = NULL;
 	index = -1;
-	*env = NULL;
-	while (envp[++index])
+	while (environ[++index])
 	{
-		key_value = ft_split(envp[index], '=');
-		*env = ft_add_node(*env, key_value[0], key_value[1]);
+		key_value = ft_split(environ[index], '=');
+		env = ft_add_node(env, key_value[0], key_value[1]);
 		ft_free_array(key_value);
 	}
-	ft_update_shlvl(env);
+	ft_update_shlvl(&env);
+	return (env);
 }
 
 /*
