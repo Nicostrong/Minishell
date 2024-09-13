@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: phkevin <phkevin@42luxembourg.lu>          +#+  +:+       +#+         #
+#    By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/16 09:35:29 by nfordoxc          #+#    #+#              #
-#    Updated: 2024/09/12 16:16:50 by phkevin          ###   Luxembour.lu       #
+#    Updated: 2024/09/13 09:12:07 by nfordoxc         ###   Luxembourg.lu      #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,12 +75,12 @@ SRC				=	./src/main.c \
 					./src/builtin/ft_pwd.c \
 					./src/builtin/ft_unset.c \
 					./src/builtin/ft_exit.c \
-					./src/tokennizer/ft_parse_2.c \
+					./src/tokennizer/ft_parse.c \
+					./src/tokennizer/ft_parse_utils.c \
 					./src/tokennizer/ft_tree.c \
-					./src/tokennizer/ft_free_tree_tokens.c \
 					./src/tokennizer/ft_tree_utils_0.c \
 					./src/tokennizer/ft_tree_utils_1.c \
-					./src/tokennizer/ft_token.c
+					./src/tokennizer/ft_free_tree_tokens.c
 
 OBJ				=	$(SRC:.c=.o)
 
@@ -129,7 +129,7 @@ BWHITE			=	'\033[1;97m'
 ################################################################################
 
 CURRENT_FILE	= 	0
-NB_SRC			=	19
+NB_SRC			=	20
 SLEEP_TIME		=	0.001
 
 define delete_progress
