@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+         #
+#    By: phkevin <phkevin@42luxembourg.lu>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/16 09:35:29 by nfordoxc          #+#    #+#              #
-#    Updated: 2024/09/12 14:56:42 by nfordoxc         ###   Luxembourg.lu      #
+#    Updated: 2024/09/12 16:16:50 by phkevin          ###   Luxembour.lu       #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,7 +78,8 @@ SRC				=	./src/main.c \
 					./src/tokennizer/ft_parse_2.c \
 					./src/tokennizer/ft_tree.c \
 					./src/tokennizer/ft_free_tree_tokens.c \
-					./src/tokennizer/ft_tree_utils.c \
+					./src/tokennizer/ft_tree_utils_0.c \
+					./src/tokennizer/ft_tree_utils_1.c \
 					./src/tokennizer/ft_token.c
 
 OBJ				=	$(SRC:.c=.o)

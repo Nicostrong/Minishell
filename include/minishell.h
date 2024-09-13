@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
+/*   By: phkevin <phkevin@42luxembourg.lu>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:46:06 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/12 15:02:58 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/13 08:52:42 by phkevin          ###   Luxembour.lu      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,8 +222,10 @@ t_tree		*ft_handle_quote(t_token **cur, t_tree **parent_node);
 t_tree		*ft_handle_option(t_token **cur, t_tree **parent_node);
 t_tree		*ft_handle_cmd(t_token **cur, t_tree **head, t_tree **parent_node);
 t_tree		*ft_handle_sub(t_token **cur, t_tree **head, t_tree **parent_node);
+t_tree		*ft_parse_subshell(t_token **tokens);
+t_tree		*ft_create_node_tree(e_token type, char *cmd);
 
-void		ft_free_all(t_shell *shell);
+//void		ft_free_all(t_shell *shell);
 void		ft_print_tokens(t_token *tokens);	// pour debug
 void		ft_print_tree(t_tree *node, int depth);		// pour debug
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_wilcard.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
+/*   By: phkevin <phkevin@42luxembourg.lu>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 10:51:48 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/06 11:28:47 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/13 09:03:22 by phkevin          ###   Luxembour.lu      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,48 +31,67 @@ static int	ft_match_wildcard(const char *pattern, const char *str)
 	return (0);
 }
 
-void	ft_wilcard(char *input)
+static int	ft_getperror(char *p_dir, DIR *dir, char **a_file)
 {
-	char			*path_directory;
-	char			**a_file;
-	struct dirent	*directory_entry;
-	DIR				*directory;
-	int				i_array;
-
-	if (!input)
-		return ;
-	path_directory = getcwd(NULL, 0);
-	if (!path_directory)
+	p_dir = getcwd(NULL, 0);
+	if (!p_dir)
 	{
 		perror("getcwd");
-		return ;
+		return (1);
 	}
-	directory = opendir(path_directory);
-	if (!directory)
+	dir = opendir(p_dir);
+	if (!dir)
 	{
 		perror("opendir");
-		free(path_directory);
-		return ;
+		free(p_dir);
+		return (1);
 	}
 	a_file = (char **)ft_calloc(4096, sizeof(char *));
 	if (!a_file)
 	{
-		closedir(directory);
-		free(path_directory);
+		closedir(dir);
+		free(p_dir);
 		perror("malloc");
-		return ;
+		return (1);
 	}
+	return (0);
+}
+
+static char	**ft_setfile(char *input, DIR *directory, char **file)
+{
+	struct dirent	*dir_ent;
+	int				i_array;
+
 	i_array = -1;
-	while ((directory_entry = readdir(directory)) != NULL)
+	dir_ent = readdir(directory);
+	while (dir_ent != NULL)
 	{
 		if (!input[1])
-			a_file[++i_array] = ft_strdup(directory_entry->d_name);
-		else if (ft_match_wildcard(input, directory_entry->d_name))
-			a_file[++i_array] = ft_strdup(directory_entry->d_name);
+			file[++i_array] = ft_strdup(dir_ent->d_name);
+		else if (ft_match_wildcard(input, dir_ent->d_name))
+			file[++i_array] = ft_strdup(dir_ent->d_name);
 		else
 			continue ;
+		dir_ent = readdir(directory);
 	}
-	a_file[++i_array] = NULL;
+	file[++i_array] = NULL;
+	return (file);
+}
+
+void	ft_wilcard(char *input)
+{
+	char			*path_directory;
+	char			**a_file;
+	DIR				*directory;
+
+	if (!input)
+		return ;
+	path_directory = getcwd(NULL, 0);
+	directory = opendir(path_directory);
+	a_file = (char **)ft_calloc(4096, sizeof(char *));
+	if (!ft_getperror(path_directory, directory, a_file))
+		return ;
+	a_file = ft_setfile(input, directory, a_file);
 	closedir(directory);
 	free(path_directory);
 	ft_putstrarray(a_file);
