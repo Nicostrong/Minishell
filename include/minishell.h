@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phkevin <phkevin@42luxembourg.lu>          +#+  +:+       +#+        */
+/*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:46:06 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/13 08:52:42 by phkevin          ###   Luxembour.lu      */
+/*   Updated: 2024/09/13 09:10:16 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,13 +208,16 @@ int			ft_unset(t_data *data, t_env **env);
  *	Parser
  */
 
-//char		**ft_parse_input(char *input);
-
 char		*ft_get_token_name(e_token token);
 
-t_token		*ft_parse_cmd(char *input);
+void		ft_free_all(t_shell *shell);
+void		ft_print_tokens(t_token *tokens);	// pour debug
+void		ft_print_tree(t_tree *node, int depth);		// pour debug
+void		ft_append_token(t_token **head, e_token type, char *value);
 
+t_tree		*ft_parse_subshell(t_token **tokens);
 t_tree		*ft_parse_token_to_tree(t_token **tokens);
+t_tree		*ft_create_node_tree(e_token type, char *cmd);
 t_tree		*ft_handle_var(t_token **cur, t_tree **parent_node);
 t_tree		*ft_handle_pipe_or_and(t_token **cur, t_tree **head);
 t_tree		*ft_handle_file(t_token **cur, t_tree **parent_node);
@@ -222,16 +225,8 @@ t_tree		*ft_handle_quote(t_token **cur, t_tree **parent_node);
 t_tree		*ft_handle_option(t_token **cur, t_tree **parent_node);
 t_tree		*ft_handle_cmd(t_token **cur, t_tree **head, t_tree **parent_node);
 t_tree		*ft_handle_sub(t_token **cur, t_tree **head, t_tree **parent_node);
-t_tree		*ft_parse_subshell(t_token **tokens);
-t_tree		*ft_create_node_tree(e_token type, char *cmd);
 
-//void		ft_free_all(t_shell *shell);
-void		ft_print_tokens(t_token *tokens);	// pour debug
-void		ft_print_tree(t_tree *node, int depth);		// pour debug
-
-//void		ft_parse_cmd(t_data *data, t_env *env);
-//void		ft_parse_echo(t_data *data, t_env *env);
-void		ft_append_token(t_token **head, e_token type, char *value);
+t_token		*ft_parse_cmd(char *input);
 
 /*
  *	Global
