@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:12:37 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/12 15:25:25 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/18 09:18:21 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ void	ft_free_tokens(t_token *tokens)
 	t_token	*cur;
 	t_token	*next;
 
+	if (!tokens)
+		return ;
 	cur = tokens;
 	while (cur)
 	{
@@ -106,12 +108,28 @@ void	ft_free_tree(t_tree *tree)
 {
 	if (!tree)
 		return;
-	ft_free_tree(tree->left);
-	ft_free_tree(tree->right);
-	ft_free_tree(tree->next);
+	if (tree->left)
+	{
+		ft_free_tree(tree->left);
+		tree->left = NULL;
+	}
+	if (tree->right)
+	{
+		ft_free_tree(tree->right);
+		tree->right = NULL;
+	}
+	if (tree->next)
+	{
+		ft_free_tree(tree->next);
+		tree->next = NULL;
+	}
 	if (tree->cmd)
+	{
 		free(tree->cmd);
-	free(tree);
+		tree->cmd = NULL;
+	}
+	if (tree)
+		free(tree);
 }
 
 /*
@@ -143,14 +161,16 @@ void	ft_free_pipex(t_pipex *pipex)
 		free(pipex->file_in);
 	if (pipex->file_out)
 		free(pipex->file_out);
-	if (pipex->path_array)
-		free(pipex->path_array);
-	if (pipex->cmd_opt_array)
-		free(pipex->cmd_opt_array);
-	if (pipex->cmd_array)
-		free(pipex->cmd_array);
-	if (pipex->access_path)
-		free(pipex->access_path);
+	if (pipex->a_path)
+		ft_free_array(pipex->a_path);
+	if (pipex->a_cmd_opt)
+		ft_free_array(pipex->a_cmd_opt);
+	if (pipex->a_cmd)
+		ft_free_array(pipex->a_cmd);
+	if (pipex->a_access_path)
+		ft_free_array(pipex->a_access_path);
+	if (pipex->a_env)
+		ft_free_array(pipex->a_env);
 	free(pipex);
 }
 

@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 13:12:26 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/12 15:26:29 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/19 10:09:27 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	handle_signal(int sign)
 	{
 		g_status = 130;
 		printf("\n");
-		rl_replace_line("", 0);
+		//rl_replace_line("", 0);	// TO comment for Mac
 		rl_on_new_line();
 		rl_redisplay();
 	}

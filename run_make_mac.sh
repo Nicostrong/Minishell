@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    run_make.sh                                        :+:      :+:    :+:    #
+#    run_make_mac.sh                                    :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/08/29 08:09:39 by nfordoxc          #+#    #+#              #
-#    Updated: 2024/09/19 10:48:04 by nfordoxc         ###   Luxembourg.lu      #
+#    Created: 2024/09/19 09:58:49 by nfordoxc          #+#    #+#              #
+#    Updated: 2024/09/19 10:46:53 by nfordoxc         ###   Luxembourg.lu      #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,8 +24,8 @@ calculate_checksum()
 {
 	for dir in "${WATCH_DIRS[@]}"
 	do
-		find "$dir" -type f -name "*.c" -exec md5sum {} \;
-	done | sort -k 2 | md5sum
+		find "$dir" -type f -name "*.c" -exec md5 {} \;
+	done | sort -k 2 | md5
 }
 
 previous_checksum=$(calculate_checksum)

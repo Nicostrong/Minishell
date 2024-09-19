@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:41:47 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/12 15:26:46 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/19 10:46:22 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,17 @@ static t_pipex	*ft_init_pipex(t_shell **shell)
 		free(*shell);
 		exit (EXIT_FAILURE);
 	}
-	pipex->nb_cmd = 0;
 	pipex->fd_in = -1;
 	pipex->fd_out = -1;
 	pipex->here_doc = 0;
 	pipex->limiter = NULL;
 	pipex->file_in = NULL;
 	pipex->file_out = NULL;
-	pipex->path_array = NULL;
-	pipex->cmd_opt_array = NULL;
-	pipex->cmd_array = NULL;
-	pipex->access_path = NULL;
+	pipex->a_path = ft_get_path(environ);
+	pipex->a_cmd_opt = NULL;
+	pipex->a_cmd = NULL;
+	pipex->a_access_path = NULL;
+	pipex->a_env = ft_create_env_array((*shell)->l_env);
 	return (pipex);
 }
 
@@ -142,7 +142,14 @@ int	main(void)
 	signal(SIGQUIT, SIG_IGN);
 	while (g_status != -1)
 	{
-		command = readline(TERM_NAME"$ ");
+		command = readline(TERM_NAME);
+		if (!command)
+		{
+			// rl_clear_history();	// for linux
+			clear_history();		// for Mac
+			ft_free_all(shell);
+			exit (EXIT_SUCCESS);
+		}
 		if (ft_strlen(command))
 		{
 			add_history(command);
@@ -151,23 +158,15 @@ int	main(void)
 			ft_print_all(shell);
 			if (ft_strequal(command, "exit"))
 			{
+				printf("exit\n");
+				// rl_clear_history();	// for linux
+				clear_history();		// for Mac
 				ft_free_all(shell);
 				exit (EXIT_SUCCESS);
 			}
 			ft_free_tokens(shell->l_token);
 			ft_free_tree(shell->tree);
 		}
-		if (!command)
-		{
-			printf("exit\n");
-			rl_clear_history();
-			ft_free_all(shell);
-			exit (EXIT_SUCCESS);
-		}
 		free(command);
 	}
-	printf("exit\n");
-	rl_clear_history();
-	ft_free_all(shell);
-	exit (EXIT_SUCCESS);
 }

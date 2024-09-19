@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_tree_utils_0.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phkevin <phkevin@42luxembourg.lu>          +#+  +:+       +#+        */
+/*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 11:32:16 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/13 08:52:34 by phkevin          ###   Luxembour.lu      */
+/*   Updated: 2024/09/19 11:20:11 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,24 +34,54 @@ t_tree	*ft_create_node_tree(e_token type, char *cmd)
 	return (node);
 }
 
-/*
- *	parse for subshell /////// A CASSER
- */
-
-/*
-static t_tree	*ft_headsub()
+t_tree	*ft_parse_heredoc(t_token **tokens)
 {
-	t_tree	*head_sub;
+	t_tree	*heredoc_node;
 	t_tree	*new_node;
+	t_tree	*parent_node;
+	t_tree	*cmd_node;
 	t_token	*cur;
-
-	if (cur->type == T_PIPE || cur->type == T_AND || cur->type == T_OR)
+	
+	heredoc_node = ft_create_node_tree((*tokens)->type, NULL);
+	cur = (*tokens)->next;
+	if (cur && cur->type == T_EOF)
 	{
-		new_node->left = head_sub;
-		head_sub = new_node;
+		new_node = ft_create_node_tree(cur->type, cur->value);
+		heredoc_node->next = new_node;
+		cur = cur->next;
 	}
+	parent_node = heredoc_node;
+	while (cur && !(cur->type == T_PIPE || cur->type == T_AND || cur->type == T_OR))
+	{
+		if (cur->type >= T_WORD && cur->type <= T_CMD)
+		{
+			cmd_node = ft_create_node_tree(cur->type, cur->value);
+			parent_node->next = cmd_node;
+			parent_node = cmd_node;
+		}
+		else if (cur->type == T_OPT)
+		{
+			new_node = ft_create_node_tree(cur->type, cur->value);
+			parent_node->next = new_node;
+			parent_node = new_node;
+		}
+		else if (cur->type >= T_F_IN && cur->type <= T_F_OUT_APPEND)
+		{
+			new_node = ft_create_node_tree(cur->type, cur->value);
+			parent_node->next = new_node;
+			parent_node = new_node;
+			cur = cur->next;
+			if (cur && cur->type == T_FILENAME)
+			{
+				new_node->next  =ft_create_node_tree(cur->type, cur->value);
+				parent_node = new_node->next;
+			}
+		}
+		cur = cur->next;
+	}
+	*tokens = cur;
+	return (heredoc_node);
 }
-*/
 
 t_tree	*ft_parse_subshell(t_token **tokens)
 {
@@ -97,7 +127,8 @@ t_tree	*ft_handle_var(t_token **cur, t_tree **parent_node)
 		(*parent_node)->next = new_node;
 	*parent_node = new_node;
 	*cur = (*cur)->next;
-	if (*cur && (*cur)->type == T_KEY) {
+	if (*cur && (*cur)->type == T_KEY)
+	{
 		new_node = ft_create_node_tree((*cur)->type, (*cur)->value);
 		(*parent_node)->next = new_node;
 		*parent_node = new_node;
@@ -108,14 +139,14 @@ t_tree	*ft_handle_var(t_token **cur, t_tree **parent_node)
 
 t_tree	*ft_handle_cmd(t_token **cur, t_tree **head, t_tree **parent_node)
 {
-    t_tree *new_node;
+	t_tree *new_node;
 	
 	new_node = ft_create_node_tree((*cur)->type, (*cur)->value);
-    if (!*head)
-        *head = new_node;
-    else
-        (*parent_node)->next = new_node;
-    *parent_node = new_node;
-    *cur = (*cur)->next;
-    return (new_node);
+	if (!*head)
+		*head = new_node;
+	else
+		(*parent_node)->next = new_node;
+	*parent_node = new_node;
+	*cur = (*cur)->next;
+	return (new_node);
 }

@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:08:59 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/13 08:43:01 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/18 13:20:32 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,8 @@ t_token	*ft_parse_cmd(char *input)
 	while (i < len_input)
 	{
 		if (ft_issep(input[i]))
-		{
 			i++;
-			continue;
-		}
-		if (input[i] == '|')
+		else if (input[i] == '|')
 		{
 			if (input[i + 1] == '|')
 			{

@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:46:06 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/13 09:10:16 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/19 11:21:25 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@
  */
 
 # define BLUE	"\033[1;94m"
+# define RED	"\033[1;91m"
 # define WHITE	"\033[0m"
-# define TERM_NAME	BLUE"minishell"WHITE
+# define TERM_NAME	BLUE"mini$"RED"[🔥🔥🔥HELL🔥🔥🔥]$ "WHITE
 
 /*
  *	Externe variable
@@ -61,25 +62,25 @@ extern int	g_status;
 
 typedef enum
 {
-	T_WORD,				//	word			=>	to print
-	T_BUILTIN,			//	builtin			=>	echo , cd, env, export, unset, exit
-	T_CMD,				//	cmd				=>	exc
-	T_OPT,				//	option			=>	-alpha
-	T_PIPE,				//	pipe			=>	|
-	T_OR,				//	or logical		=>	||
-	T_AND,				//	and logical		=>	&&
-	T_F_IN,				//	file in			=>	<
-	T_HEREDOC,			//	heredoc mod		=>	<<
-	T_EOF,				//	limiter			=>	word
-	T_F_OUT,			//	file out		=>	>
-	T_F_OUT_APPEND,		//	file out append	=>	>>
-	T_FILENAME,			//	file name		=>	word
-	T_SUBSHELL,			//	subshell		=>	( ou )
-	T_DQUOTE,			//	double quote	=>	"
-	T_SQUOTE,			//	simple quote	=>	'
-	T_VAR,				//	env var			=>	$
-	T_KEY,				//	env key			=>	PWD
-	T_WILDCARD,			//	wildcard		=>	*
+	T_WORD,				//	word			=	0	=>	to print
+	T_BUILTIN,			//	builtin			=	1	=>	echo , cd, env, export, unset, exit
+	T_CMD,				//	cmd				=	2	=>	exc
+	T_OPT,				//	option			=	3	=>	-alpha
+	T_PIPE,				//	pipe			=	4	=>	|
+	T_OR,				//	or logical		=	5	=>	||
+	T_AND,				//	and logical		=	6	=>	&&
+	T_F_IN,				//	file in			=	7	=>	<
+	T_F_OUT,			//	file out		=	8	=>	>
+	T_F_OUT_APPEND,		//	file out append	=	9	=>	>>
+	T_HEREDOC,			//	heredoc mod		=	10	=>	<<
+	T_EOF,				//	limiter			=	11	=>	word
+	T_FILENAME,			//	file name		=	12	=>	word
+	T_SUBSHELL,			//	subshell		=	13	=>	( ou )
+	T_DQUOTE,			//	double quote	=	14	=>	"
+	T_SQUOTE,			//	simple quote	=	15	=>	'
+	T_VAR,				//	env var			=	16	=>	$
+	T_KEY,				//	env key			=	17	=>	PWD
+	T_WILDCARD,			//	wildcard		=	18	=>	*
 	T_END				//	end of cmd
 }	e_token;
 
@@ -107,22 +108,23 @@ typedef struct s_tree
 	char			*cmd;		//	nom de la commande
 	struct s_tree	*left;		//	sous expression gauche
 	struct s_tree	*right;		//	sous expression droite
-	struct s_tree	*next;		//	next commande (voir pour le noeud parent)
+	struct s_tree	*next;		//	suite de la commande
 }	t_tree;
 
 typedef struct s_pipex
 {
-	int		nb_cmd;
-	int		fd_in;
-	int		fd_out;
-	int		here_doc;
-	char	*limiter;
-	char	*file_in;
-	char	*file_out;
-	char	**path_array;
-	char	**cmd_opt_array;
-	char	**cmd_array;
-	char	**access_path;
+	int		fd_in;				//	fd du file in
+	int		fd_out;				//	fd du file out
+	int		append;				//	bool si mode append (>>)
+	int		here_doc;			//	bool si mode here_doc (<<)
+	char	*limiter;			//	mot du limiter EOF
+	char	*file_in;			//	nom du fichier in
+	char	*file_out;			//	nom du fichier out
+	char	**a_path;			//	array avec tout les path pour trouver les executables
+	char	**a_cmd_opt;		//	array avec la commande et les options eet les args
+	char	**a_cmd;			//	array avec juste le nom de la commande
+	char	**a_access_path;	//	array avec le path de la commande pour execve
+	char	**a_env;			//	array of environement variable for execve
 }	t_pipex;
 
 typedef struct s_minishell
@@ -215,6 +217,7 @@ void		ft_print_tokens(t_token *tokens);	// pour debug
 void		ft_print_tree(t_tree *node, int depth);		// pour debug
 void		ft_append_token(t_token **head, e_token type, char *value);
 
+t_tree		*ft_parse_heredoc(t_token **tokens);
 t_tree		*ft_parse_subshell(t_token **tokens);
 t_tree		*ft_parse_token_to_tree(t_token **tokens);
 t_tree		*ft_create_node_tree(e_token type, char *cmd);
@@ -229,7 +232,18 @@ t_tree		*ft_handle_sub(t_token **cur, t_tree **head, t_tree **parent_node);
 t_token		*ft_parse_cmd(char *input);
 
 /*
- *	Global
+ *	pipex
+ */
+
+int			ft_count_cmd(t_tree *node);
+
+char		**ft_get_path(char **env);
+char		**ft_create_env_array(t_env *env);
+
+void		ft_get_fd_in_out(t_pipex **pipex, int *fd);
+
+/*
+ *	global
  */
 
 void		handle_signal(int sign);
