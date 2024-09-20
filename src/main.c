@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
+/*   By: phkevin <phkevin@42luxembourg.lu>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:41:47 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/20 11:01:55 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/20 11:28:34 by phkevin          ###   Luxembour.lu      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ int	main(void)
 			shell->tree = ft_parse_token_to_tree(&shell->l_token);
 			ft_print_all(shell);	//	DEBUG
 			ft_fill_pipex(shell);
-			ft_print_pipex(shell->pipex);
+			//ft_print_pipex(shell->pipex);
 			if (ft_strequal(command, "exit"))
 			{
 				printf("exit\n");

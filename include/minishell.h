@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
+/*   By: phkevin <phkevin@42luxembourg.lu>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:46:06 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/20 11:01:27 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/20 11:26:00 by phkevin          ###   Luxembour.lu      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,6 +230,21 @@ t_tree		*ft_handle_cmd(t_token **cur, t_tree **head, t_tree **parent_node);
 t_tree		*ft_handle_sub(t_token **cur, t_tree **head, t_tree **parent_node);
 
 t_token		*ft_parse_cmd(char *input);
+
+/*
+ * Parser Util
+ */
+int			ft_isvarchar(char c);
+void		ft_froward(int *i, char *input, t_token **tok);
+void		ft_handherdoc(int *i, int leninp, char *input, t_token **tok);
+void		ft_handinfi(int *i, int leninp, char *input, t_token **tok);
+void		ft_append(int *i, int leninp, char *input, t_token **tok);
+void		ft_subshell(int *i, char *input, t_token **tok);
+void		ft_quote(int *i, int leninp, char *input, t_token **tok);
+void		ft_dquote(int *i, int leninp, char *input, t_token **tok);
+void		ft_var(int *i, int leninp, char *input, t_token **tok);
+void		ft_wildcardopt(int *i, int leninp, char *input, t_token **tok);
+void		ft_isbuiltin(int *i, int leninp, char *input, t_token **tok);
 
 /*
  *	pipex

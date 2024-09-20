@@ -3,207 +3,85 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
+/*   By: phkevin <phkevin@42luxembourg.lu>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:08:59 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/20 09:09:27 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/20 11:35:55 by phkevin          ###   Luxembour.lu      */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static int	ft_isvarchar(char c)
+int	ft_isvarchar(char c)
 {
 	return (ft_isalnum(c) || c == '_');
 }
 
+static void	ft_worktree(int *i, int leninp, char *input, t_token **tok)
+{
+	ft_froward(i, input, tok);
+	if (input[*i] == '<')
+	{
+		if (input[*i + 1] == '<')
+			ft_handherdoc(i, leninp, input, tok);
+		else
+			ft_handinfi(i, leninp, input, tok);
+	}
+	else if (input[*i] == '>')
+		ft_append(i, leninp, input, tok);
+	else if (input[*i] == '(' || input[*i] == ')')
+		ft_subshell(i, input, tok);
+	else if (input[*i] == '\'')
+		ft_quote(i, leninp, input, tok);
+	else if (input[*i] == '"')
+		ft_dquote(i, leninp, input, tok);
+	else if (input[*i] == '$')
+		ft_var(i, leninp, input, tok);
+	else if (input[*i] == '*' || input[*i] == '-')
+		ft_wildcardopt(i, leninp, input, tok);
+	else
+		ft_isbuiltin(i, leninp, input, tok);
+}
+
+/**
+ * @brief Analyse et découpe une commande shell en une liste de tokens.
+ * 
+ * Cette fonction prend une chaîne de caractères représentant une commande
+ * shell et la découpe en plusieurs tokens. Les tokens représentent des 
+ * opérateurs logiques, des redirections, des variables d'environnement, 
+ * des guillemets, des mots simples, des commandes, ou des sous-shells.
+ * Chaque token est ajouté à la liste chaînée de tokens.
+ * 
+ * @param input Chaîne de caractères contenant la commande shell à analyser.
+ * 
+ * @return t_token* Liste chaînée contenant tous les tokens analysés.
+ * 
+ * Les différents tokens incluent :
+ * - `T_OR`, `T_AND`, `T_PIPE` pour les opérateurs logiques
+ * - `T_HEREDOC`, `T_F_IN`, `T_F_OUT`, `T_F_OUT_APPEND` pour les redirections
+ * - `T_EOF` pour la fin d'un document (EOF)
+ * - `T_CMD`, `T_WORD` pour les commandes et autres mots
+ * - `T_VAR`, `T_KEY` pour les variables d'environnement
+ * - `T_SQUOTE`, `T_DQUOTE` pour les chaînes entre guillemets
+ * - `T_SUBSHELL` pour les sous-shells (parenthèses)
+ * - `T_BUILTIN` pour les commandes internes du shell (ex: echo, cd)
+ */
 t_token	*ft_parse_cmd(char *input)
 {
 	t_token	*tokens;
-	char	*value;
-	char	quote;
 	int		i;
 	int		len_input;
-	int		start;
 
 	tokens = NULL;
 	i = 0;
-	start = 0;
 	len_input = ft_strlen(input);
 	while (i < len_input)
 	{
 		if (ft_issep(input[i]))
 			i++;
-		else if (input[i] == '|')
-		{
-			if (input[i + 1] == '|')
-			{
-				ft_append_token(&tokens, T_OR, "||");
-				i += 2;
-			}
-			else
-			{
-				ft_append_token(&tokens, T_PIPE, "|");
-				i++;
-			}
-		}
-		else if (input[i] == '&')
-		{
-			if (input[i + 1] == '&')
-			{
-				ft_append_token(&tokens, T_AND, "&&");
-				i += 2;
-			}
-			else
-				i++;
-		}
-		else if (input[i] == '<')
-		{
-			if (input[i + 1] == '<')
-			{
-				ft_append_token(&tokens, T_HEREDOC, "<<");
-				i += 2;
-				while (i < len_input && ft_issep(input[i]))
-					i++;
-				start = i;
-				while (i < len_input && !ft_issep(input[i]))
-					i++;
-				value = ft_strndup(&input[start], i - start);
-				ft_append_token(&tokens, T_EOF, value);
-				free(value);
-			}
-			else
-			{
-				ft_append_token(&tokens, T_F_IN, "<");
-				i++;
-				while (i < len_input && ft_issep(input[i]))
-					i++;
-				start = i;
-				while (i < len_input && !ft_issep(input[i]))
-					i++;
-				value = ft_strndup(&input[start], i - start);
-				ft_append_token(&tokens, T_FILENAME, value);
-				free(value);
-			}
-		}
-		else if (input[i] == '>')
-		{
-			if (input[i + 1] == '>')
-			{
-				ft_append_token(&tokens, T_F_OUT_APPEND, ">>");
-				i += 2;
-			}
-			else
-			{
-				ft_append_token(&tokens, T_F_OUT, ">");
-				i++;
-			}
-			while (i < len_input && ft_issep(input[i]))
-				i++;
-			start = i;
-			while (i < len_input && !ft_issep(input[i]))
-				i++;
-			value = ft_strndup(&input[start], i - start);
-			ft_append_token(&tokens, T_FILENAME, value);
-			free(value);
-		}
-		else if (input[i] == '(')
-		{
-			ft_append_token(&tokens, T_SUBSHELL, "(");
-			i++;
-		}
-		else if (input[i] == ')')
-		{
-			ft_append_token(&tokens, T_SUBSHELL, ")");
-			i++;
-		}
-		else if (input[i] == '\'')
-		{
-			quote = input[i];
-			start = ++i;
-			while (i < len_input && input[i] != quote)
-				i++;
-			if (i < len_input)
-			{
-				value = ft_strndup(&input[start], i - start);
-				ft_append_token(&tokens, T_SQUOTE, value);
-				free(value);
-				i++;
-			}
-			else
-			{
-				printf("Erreur : guillemet simple non fermé\n");
-				exit (EXIT_FAILURE);
-			}
-		}
-		else if (input[i] == '"')
-		{
-			quote = input[i];
-			start = ++i;
-			while (i < len_input && input[i] != quote)
-				i++;
-			if (i < len_input)
-			{
-				value = ft_strndup(&input[start], i - start);
-				ft_append_token(&tokens, T_DQUOTE, value);
-				free(value);
-				i++;
-			}
-			else
-			{
-				printf("Erreur : guillemet double non fermé\n");
-				exit (EXIT_FAILURE);
-			}
-		}
-		else if (input[i] == '$')
-		{
-			ft_append_token(&tokens, T_VAR, "$");
-			start = ++i;
-			while (i < len_input && ft_isvarchar(input[i]))
-				i++;
-			value = ft_strndup(&input[start], i - start);
-			ft_append_token(&tokens, T_KEY, value);
-			free(value);
-		}
-		else if (input[i] == '*')
-		{
-			start = ++i;
-			while (i < len_input && ft_issep(input[i]))
-				i++;
-			value = ft_strndup(&input[start], i - start);
-			ft_append_token(&tokens, T_WILDCARD, value);
-			free(value);
-		}
-		else if (input[i] == '-')
-		{
-			start = i;
-			while (i < len_input && !ft_issep(input[i]))
-				i++;
-			value = ft_strndup(&input[start], i - start);
-			ft_append_token(&tokens, T_OPT, value);
-			free(value);
-		}
-		else
-		{
-			start = i;
-			while (i < len_input && !ft_issep(input[i]) && 
-				input[i] != '|' && input[i] != '&' && 
-				input[i] != '<' && input[i] != '>' && 
-				input[i] != '(' && input[i] != ')' && 
-				input[i] != '\'' && input[i] != '"' &&
-				input[i] != '$' && input[i] != '*')
-				i++;
-			value = ft_strndup(&input[start], i - start);
-			if (ft_strequal(value, "echo") || ft_strequal(value, "cd") ||
-				ft_strequal(value, "env") || ft_strequal(value, "export") ||
-				ft_strequal(value, "unset") || ft_strequal(value, "exit"))
-				ft_append_token(&tokens, T_BUILTIN, value);
-			else if (ft_strchr(value, '/'))	// || on arrive a executer le binaire => pipex ft_get_access
-				ft_append_token(&tokens, T_CMD, value);
-			else
-				ft_append_token(&tokens, T_WORD, value);
-			free(value);
-		}
+		
+		else	
+			ft_worktree(&i, len_input, input, &tokens);
 	}
 	return (tokens);
 }

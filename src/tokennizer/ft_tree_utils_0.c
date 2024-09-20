@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_tree_utils_0.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
+/*   By: phkevin <phkevin@42luxembourg.lu>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 11:32:16 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/20 09:23:02 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/20 11:49:26 by phkevin          ###   Luxembour.lu      */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,17 @@ t_tree	*ft_parse_heredoc(t_token **tokens)
 	return (heredoc_node);
 }
 
+static int	ft_headsub(t_tree **hs, t_tree **n_node, t_token **cur)
+{
+	if ((*cur)->type == T_PIPE || (*cur)->type == T_AND || (*cur)->type == T_OR)
+	{
+		(*n_node)->left = *hs;
+		*hs = *n_node;
+		return (0);
+	}
+	return (1);
+}
+
 t_tree	*ft_parse_subshell(t_token **tokens)
 {
 	t_tree	*head_sub;
@@ -70,12 +81,7 @@ t_tree	*ft_parse_subshell(t_token **tokens)
 			head_sub = new_node;
 		else if (parent_node)
 		{
-			if (cur->type == T_PIPE || cur->type == T_AND || cur->type == T_OR)
-			{
-				new_node->left = head_sub;
-				head_sub = new_node;
-			}
-			else
+			if (ft_headsub(&head_sub, &new_node, &cur))
 				parent_node->right = new_node;
 		}
 		parent_node = new_node;
