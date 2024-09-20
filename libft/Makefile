@@ -6,7 +6,7 @@
 #    By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/19 13:47:49 by nfordoxc          #+#    #+#              #
-#    Updated: 2024/09/09 10:08:24 by nfordoxc         ###   Luxembourg.lu      #
+#    Updated: 2024/09/20 11:02:59 by nfordoxc         ###   Luxembourg.lu      #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,6 +72,7 @@ SRC				=	ft_charchr.c \
 					ft_strndup.c \
 					ft_substr.c \
 					ft_strarraycpy.c \
+					ft_append_str.c \
 					ft_strjoin.c \
 					ft_strtrim.c \
 					ft_split.c \
@@ -142,7 +143,7 @@ BWHITE			=	'\033[1;97m'
 ################################################################################
 
 CURRENT_FILE	= 	0
-NB_SRC			=	57
+NB_SRC			=	58
 SLEEP_TIME		=	0.001
 
 ################################################################################

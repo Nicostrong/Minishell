@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/19 14:59:21 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/09 10:07:58 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/19 20:58:34 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ char		*ft_strnstr(const char *big, const char *little, size_t len);
 
 char		**ft_strarraycpy(char **array);
 char		**ft_split(char const *s, char c);
+char		**ft_append_str(char **array, char *str);	// TO TESTED
 
 void		ft_striteri(char *s, void (*f)(unsigned int, char *));
 

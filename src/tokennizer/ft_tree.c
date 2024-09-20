@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:59:20 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/19 11:24:18 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/20 09:21:30 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ t_tree	*ft_parse_token_to_tree(t_token **tokens)
 				head = heredoc;
 			else
 				parent_node->next = heredoc;
-			parent_node = heredoc;
+			parent_node = heredoc->next;
 		}
 		else if (cur->type >= T_WORD && cur->type <= T_CMD)
 		{

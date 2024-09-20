@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:46:06 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/19 11:21:25 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/20 11:01:27 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,14 +117,14 @@ typedef struct s_pipex
 	int		fd_out;				//	fd du file out
 	int		append;				//	bool si mode append (>>)
 	int		here_doc;			//	bool si mode here_doc (<<)
+	int		builtin;			//	bool si builtin fonction
 	char	*limiter;			//	mot du limiter EOF
 	char	*file_in;			//	nom du fichier in
 	char	*file_out;			//	nom du fichier out
+	char	*path_cmd;			//	path de la commande evecve->arg[0]
 	char	**a_path;			//	array avec tout les path pour trouver les executables
-	char	**a_cmd_opt;		//	array avec la commande et les options eet les args
-	char	**a_cmd;			//	array avec juste le nom de la commande
-	char	**a_access_path;	//	array avec le path de la commande pour execve
-	char	**a_env;			//	array of environement variable for execve
+	char	**a_cmd_opt;		//	array pour execve->arg[1]
+	char	**a_env;			//	array pour execve->arg[2]
 }	t_pipex;
 
 typedef struct s_minishell
@@ -237,9 +237,13 @@ t_token		*ft_parse_cmd(char *input);
 
 int			ft_count_cmd(t_tree *node);
 
+char		*ft_concat_path_cmd(t_pipex *pipex, char *cmd);
+
 char		**ft_get_path(char **env);
 char		**ft_create_env_array(t_env *env);
 
+void		ft_fill_pipex(t_shell *shell);
+void		ft_print_pipex(t_pipex *pipex);
 void		ft_get_fd_in_out(t_pipex **pipex, int *fd);
 
 /*

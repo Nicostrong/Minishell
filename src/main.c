@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:41:47 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/19 10:46:22 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/20 11:01:55 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,9 @@ static t_pipex	*ft_init_pipex(t_shell **shell)
 	pipex->limiter = NULL;
 	pipex->file_in = NULL;
 	pipex->file_out = NULL;
+	pipex->path_cmd = NULL;
 	pipex->a_path = ft_get_path(environ);
 	pipex->a_cmd_opt = NULL;
-	pipex->a_cmd = NULL;
-	pipex->a_access_path = NULL;
 	pipex->a_env = ft_create_env_array((*shell)->l_env);
 	return (pipex);
 }
@@ -145,8 +144,8 @@ int	main(void)
 		command = readline(TERM_NAME);
 		if (!command)
 		{
-			// rl_clear_history();	// for linux
-			clear_history();		// for Mac
+			rl_clear_history();	// for linux
+			// /clear_history();		// for Mac
 			ft_free_all(shell);
 			exit (EXIT_SUCCESS);
 		}
@@ -155,12 +154,14 @@ int	main(void)
 			add_history(command);
 			shell->l_token = ft_parse_cmd(command);
 			shell->tree = ft_parse_token_to_tree(&shell->l_token);
-			ft_print_all(shell);
+			ft_print_all(shell);	//	DEBUG
+			ft_fill_pipex(shell);
+			ft_print_pipex(shell->pipex);
 			if (ft_strequal(command, "exit"))
 			{
 				printf("exit\n");
-				// rl_clear_history();	// for linux
-				clear_history();		// for Mac
+				rl_clear_history();	// for linux
+				// clear_history();		// for Mac
 				ft_free_all(shell);
 				exit (EXIT_SUCCESS);
 			}

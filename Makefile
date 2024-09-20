@@ -6,7 +6,7 @@
 #    By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/16 09:35:29 by nfordoxc          #+#    #+#              #
-#    Updated: 2024/09/18 09:07:44 by nfordoxc         ###   Luxembourg.lu      #
+#    Updated: 2024/09/20 11:03:08 by nfordoxc         ###   Luxembourg.lu      #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,7 +82,9 @@ SRC				=	./src/main.c \
 					./src/tokennizer/ft_tree_utils_1.c \
 					./src/tokennizer/ft_free_tree_tokens.c \
 					./src/pipex/ft_pipex_utils.c \
-					./src/pipex/ft_env_to_array.c
+					./src/pipex/ft_env_to_array.c \
+					./src/pipex/ft_get_access.c \
+					./src/pipex/ft_fill_pipex.c
 
 OBJ				=	$(SRC:.c=.o)
 
@@ -131,7 +133,7 @@ BWHITE			=	'\033[1;97m'
 ################################################################################
 
 CURRENT_FILE	= 	0
-NB_SRC			=	22
+NB_SRC			=	24
 SLEEP_TIME		=	0.001
 
 define delete_progress

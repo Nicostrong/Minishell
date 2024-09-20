@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 16:02:54 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/13 10:08:37 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/20 11:17:19 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,14 @@ int	ft_exec_builtin(t_shell *shell, t_tree *node)
 
 int	ft_exec_cmd(t_shell *shell, t_tree *node)
 {
-	char	*cmd_path;
 	int		pid;
-	int		status;
+	t_pipex	*pipex;
 	
+	pipex = shell->pipex;
 	pid = fork();
 	if (pid == 0)
 	{
-		ft_redirection(node);
-		cmd_path = node->cmd;
-		if (execve(cmd_path, &node->cmd, environ) == -1)
+		if (execve(pipex->path_cmd, pipex->a_cmd_opt, pipex->a_env) == -1)
 		{
 			perror("Erreur execve");
 			exit(EXIT_FAILURE);
@@ -71,8 +69,8 @@ int	ft_exec_cmd(t_shell *shell, t_tree *node)
 	}
 	else if (pid > 0)
 	{
-		waitpid(pid, &status, 0);
-		update_exit_code(shell, WEXITSTATUS(status));
+		waitpid(pid, &shell->code_exit, 0);
+		update_exit_code(shell, WEXITSTATUS(shell->code_exit));
 	}
 	else
 	{
@@ -141,4 +139,42 @@ int	ft_exec_tree(t_shell *shell, t_tree *node)
 		}
 	}
 	return (0);
+}
+
+/*
+ *	execute pipex
+ */
+
+void	ft_execute_pipex(t_pipex *pipex)
+{
+	char	*line;
+	int		fd_heredoc;
+
+	if (pipex->here_doc)
+	{
+		fd_heredoc = open(".heredoc_tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		while (1)
+		{
+			line = get_next_line(0);
+			if (ft_strequal(line, pipex->limiter))
+				break;
+			write(fd_heredoc, line, ft_strlen(line));
+			free(line);
+		}
+		get_next_line(-1);
+		close(fd_heredoc);
+		pipex->fd_in = open(".heredoc_tmp", O_RDONLY);
+	}
+	if (pipex->fd_in != -1)
+		dup2(pipex->fd_in, STDIN_FILENO);
+	if (pipex->fd_out != -1)
+		dup2(pipex->fd_out, STDOUT_FILENO);
+	if (!pipex->path_cmd)
+	{
+		ft_putstr_fd("Command not found\n", 2);
+		exit(1);
+	}
+	execve(pipex->path_cmd, pipex->a_cmd_opt, pipex->a_env);
+	perror("execve");
+	exit(1);
 }

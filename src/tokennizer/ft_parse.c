@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:08:59 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/18 13:20:32 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/20 09:09:27 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,6 @@ t_token	*ft_parse_cmd(char *input)
 					i++;
 				value = ft_strndup(&input[start], i - start);
 				ft_append_token(&tokens, T_EOF, value);
-				free(value);
-				while (i < len_input && ft_issep(input[i]))
-					i++;
-				start = i;
-				while (i < len_input && !ft_issep(input[i]))
-					i++;
-				value = ft_strndup(&input[start], i - start);
-				ft_append_token(&tokens, T_CMD, value);
 				free(value);
 			}
 			else

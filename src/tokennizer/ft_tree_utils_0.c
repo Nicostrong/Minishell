@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 11:32:16 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/19 11:20:11 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/20 09:23:02 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ t_tree	*ft_parse_heredoc(t_token **tokens)
 {
 	t_tree	*heredoc_node;
 	t_tree	*new_node;
-	t_tree	*parent_node;
-	t_tree	*cmd_node;
 	t_token	*cur;
 	
 	heredoc_node = ft_create_node_tree((*tokens)->type, NULL);
@@ -48,35 +46,6 @@ t_tree	*ft_parse_heredoc(t_token **tokens)
 	{
 		new_node = ft_create_node_tree(cur->type, cur->value);
 		heredoc_node->next = new_node;
-		cur = cur->next;
-	}
-	parent_node = heredoc_node;
-	while (cur && !(cur->type == T_PIPE || cur->type == T_AND || cur->type == T_OR))
-	{
-		if (cur->type >= T_WORD && cur->type <= T_CMD)
-		{
-			cmd_node = ft_create_node_tree(cur->type, cur->value);
-			parent_node->next = cmd_node;
-			parent_node = cmd_node;
-		}
-		else if (cur->type == T_OPT)
-		{
-			new_node = ft_create_node_tree(cur->type, cur->value);
-			parent_node->next = new_node;
-			parent_node = new_node;
-		}
-		else if (cur->type >= T_F_IN && cur->type <= T_F_OUT_APPEND)
-		{
-			new_node = ft_create_node_tree(cur->type, cur->value);
-			parent_node->next = new_node;
-			parent_node = new_node;
-			cur = cur->next;
-			if (cur && cur->type == T_FILENAME)
-			{
-				new_node->next  =ft_create_node_tree(cur->type, cur->value);
-				parent_node = new_node->next;
-			}
-		}
 		cur = cur->next;
 	}
 	*tokens = cur;

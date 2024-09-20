@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:12:37 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/18 09:18:21 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/20 09:53:47 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,14 +161,12 @@ void	ft_free_pipex(t_pipex *pipex)
 		free(pipex->file_in);
 	if (pipex->file_out)
 		free(pipex->file_out);
+	if (pipex->path_cmd)
+		free(pipex->path_cmd);
 	if (pipex->a_path)
 		ft_free_array(pipex->a_path);
 	if (pipex->a_cmd_opt)
 		ft_free_array(pipex->a_cmd_opt);
-	if (pipex->a_cmd)
-		ft_free_array(pipex->a_cmd);
-	if (pipex->a_access_path)
-		ft_free_array(pipex->a_access_path);
 	if (pipex->a_env)
 		ft_free_array(pipex->a_env);
 	free(pipex);
