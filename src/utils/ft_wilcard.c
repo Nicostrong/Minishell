@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_wilcard.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phkevin <phkevin@42luxembourg.lu>          +#+  +:+       +#+        */
+/*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 10:51:48 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/13 09:03:22 by phkevin          ###   Luxembour.lu      */
+/*   Updated: 2024/09/22 14:13:03 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 static int	ft_match_wildcard(const char *pattern, const char *str)
 {

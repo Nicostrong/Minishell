@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 10:14:14 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/20 11:10:00 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 22/09/2024 15:41:09 by Nicostrong       ###   ########.lu       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,28 +87,4 @@ char	**ft_get_path(char **env)
 	path = env[index] + 5;
 	path_array = ft_split(path, ':');
 	return (path_array);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//		DEBUG	DEBUG	DEBUG	DEBUG	DEBUG	DEBUG	DEBUG	DEBUG	DEBUG
-///////////////////////////////////////////////////////////////////////////////
-
-void	ft_print_pipex(t_pipex *pipex)
-{
-	printf("PIPEX STRUCURE :\n");
-	printf("fd_in = %d\n", pipex->fd_in);
-	printf("fd_out = %d\n", pipex->fd_in);
-	printf("bool append = %s\n", pipex->append ? "TRUE" : "FALSE");
-	printf("bool here_doc = %s\n", pipex->here_doc ? "TRUE" : "FALSE");
-	printf("bool builtin = %s\n", pipex->builtin ? "TRUE" : "FALSE");
-	printf("Limiter = %s\n", pipex->limiter);
-	printf("file_in = %s\n", pipex->file_in);
-	printf("file_out = %s\n", pipex->file_out);
-	printf("path_cmd = %s\n", pipex->path_cmd);
-	printf("PATH ARRAY :\n");
-	ft_putstrarray(pipex->a_path);
-	printf("CMD OPT ARRAY :\n");
-	ft_putstrarray(pipex->a_cmd_opt);
-	printf("ENV ARRAY :\n");
-	ft_putstrarray(pipex->a_env);
 }

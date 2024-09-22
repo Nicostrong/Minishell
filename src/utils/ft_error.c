@@ -6,11 +6,11 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 11:00:19 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/30 14:00:29 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 22/09/2024 15:39:00 by Nicostrong       ###   ########.lu       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 /*
  * <cat>minishell</cat>

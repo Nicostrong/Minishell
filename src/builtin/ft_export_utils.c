@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 12:07:18 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/30 15:48:56 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 22/09/2024 15:36:10 by Nicostrong       ###   ########.lu       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,26 @@ char	*ft_get_value(char *key_value)
 	return (value);
 }
 
+/*
+ * <cat>minishell</cat>
+ *
+ * <summary>
+ * 	int	ft_valid_key(char *key)
+ * </summary>
+ *
+ * <description>
+ * 	ft_valid_key check if the key is a valide format key name.
+ * </description>
+ *
+ * <param type="char *" name="key">value of the key to evaluate</param>
+ *
+ * <return>
+ *  1 if it's a valid key name or
+ *	0 if it isn't a valid key name.
+ * </return>
+ *
+ */
+
 int	ft_valid_key(char *key)
 {
 	if (ft_isalpha(key[0]) || key[0] == '_')
@@ -75,7 +95,7 @@ char	*ft_get_key(char *key_value)
 {
 	char	*key;
 	char	**a_key_value;
-	
+
 	if (!key_value)
 		return (NULL);
 	a_key_value = ft_split(key_value, '=');
@@ -163,16 +183,3 @@ void	ft_export_value(t_env **env, char *key_val)
 		ft_free_array(a_key_val);
 	}
 }
-/*
-EXPORT
-
-export seul => affiche la liste des variable avec value meme les variable vide
-export var => cree une var vide
-export var=value => si var existe => mise a jour de value
-					si var new => creation de var avec value
-export var=VAL1=val2=val3 => si var exist => mise a jour avec VAL1=val2=val3
-							 si var new => creation de var avec VAL1=val2=val3
-export var1=val1 var2=val2 varn=valn => pour chaque var => check if exist => MAJ || NEW
-
-		50€ la photo biz
-		*/

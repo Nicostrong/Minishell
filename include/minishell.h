@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phkevin <phkevin@42luxembourg.lu>          +#+  +:+       +#+        */
+/*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:46:06 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/20 11:26:00 by phkevin          ###   Luxembour.lu      */
+/*   Updated: 2024/09/22 17:59:54 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,13 +99,14 @@ typedef struct s_token
 {
 	e_token			type;
 	char			*value;
+	struct s_token	*before;
 	struct s_token	*next;
 }	t_token;
 
 typedef struct s_tree
 {
-	e_token			type;		//	type de l operation
-	char			*cmd;		//	nom de la commande
+	e_token			type;		//	nom du token
+	char			*value;		//	valeur du toten
 	struct s_tree	*left;		//	sous expression gauche
 	struct s_tree	*right;		//	sous expression droite
 	struct s_tree	*next;		//	suite de la commande
@@ -164,11 +165,7 @@ int			ft_env(t_data *data, t_env **env);
 
 char		*ft_get_env_value(t_env *env, char *key);
 
-void		ft_update_shlvl(t_env **env);
 void		ft_set_env_value(t_env **env, char *key, char *value);
-
-t_env		*ft_init_env(void);
-t_env		*ft_add_node(t_env *env, char *key, char *value);
 
 	/*
 	 *	exit
@@ -207,44 +204,36 @@ int			ft_pwd(t_env *env);
 int			ft_unset(t_data *data, t_env **env);
 
 /*
- *	Parser
+ *	token
  */
 
-char		*ft_get_token_name(e_token token);
-
-void		ft_free_all(t_shell *shell);
-void		ft_print_tokens(t_token *tokens);	// pour debug
-void		ft_print_tree(t_tree *node, int depth);		// pour debug
+void		ft_handle_word(char *input, int *i, t_token **tokens, t_shell *shell);
+void		ft_handle_file_in(char *input, int *i, t_token **tokens);
+void		ft_handle_env_var(char *input, int *i, t_token **tokens);
+void		ft_handle_file_out(char *input, int *i, t_token **tokens);
+void		ft_handle_operator(char *input, int *i, t_token **tokens);
+void		ft_handle_subshell(char *input, int *i, t_token **tokens);
+void		ft_handle_d_s_quote(char *input, int *i, t_token **tokens);
 void		ft_append_token(t_token **head, e_token type, char *value);
+
+t_token		*ft_parse_cmd(char *input, t_shell *shell);
+
+/*
+ *	tree
+ */
+
+void		ft_handle_var(t_token **cur, t_tree **parent);
+void		ft_handle_file(t_token **cur, t_tree **parent);
+void		ft_handle_quote(t_token **cur, t_tree **parent);
+void		ft_handle_option(t_token **cur, t_tree **parent);
+void		ft_handle_cmd(t_token **cur, t_tree **head, t_tree **parent);
+void		ft_handle_sub(t_token **cur, t_tree **head, t_tree **parent);
 
 t_tree		*ft_parse_heredoc(t_token **tokens);
 t_tree		*ft_parse_subshell(t_token **tokens);
 t_tree		*ft_parse_token_to_tree(t_token **tokens);
-t_tree		*ft_create_node_tree(e_token type, char *cmd);
-t_tree		*ft_handle_var(t_token **cur, t_tree **parent_node);
+t_tree		*ft_create_node_tree(e_token type, char *value);
 t_tree		*ft_handle_pipe_or_and(t_token **cur, t_tree **head);
-t_tree		*ft_handle_file(t_token **cur, t_tree **parent_node);
-t_tree		*ft_handle_quote(t_token **cur, t_tree **parent_node);
-t_tree		*ft_handle_option(t_token **cur, t_tree **parent_node);
-t_tree		*ft_handle_cmd(t_token **cur, t_tree **head, t_tree **parent_node);
-t_tree		*ft_handle_sub(t_token **cur, t_tree **head, t_tree **parent_node);
-
-t_token		*ft_parse_cmd(char *input);
-
-/*
- * Parser Util
- */
-int			ft_isvarchar(char c);
-void		ft_froward(int *i, char *input, t_token **tok);
-void		ft_handherdoc(int *i, int leninp, char *input, t_token **tok);
-void		ft_handinfi(int *i, int leninp, char *input, t_token **tok);
-void		ft_append(int *i, int leninp, char *input, t_token **tok);
-void		ft_subshell(int *i, char *input, t_token **tok);
-void		ft_quote(int *i, int leninp, char *input, t_token **tok);
-void		ft_dquote(int *i, int leninp, char *input, t_token **tok);
-void		ft_var(int *i, int leninp, char *input, t_token **tok);
-void		ft_wildcardopt(int *i, int leninp, char *input, t_token **tok);
-void		ft_isbuiltin(int *i, int leninp, char *input, t_token **tok);
 
 /*
  *	pipex
@@ -258,17 +247,22 @@ char		**ft_get_path(char **env);
 char		**ft_create_env_array(t_env *env);
 
 void		ft_fill_pipex(t_shell *shell);
-void		ft_print_pipex(t_pipex *pipex);
 void		ft_get_fd_in_out(t_pipex **pipex, int *fd);
 
 /*
- *	global
+ *	utils
  */
+
+int			ft_check_syntax_input(char *cmd, t_shell *shell);
 
 void		handle_signal(int sign);
 void		ft_wilcard(char *input);
 void		ft_print_error(char *cmd);
 void		ft_builtin(t_data *data, t_env **env);
+
+t_env		*ft_add_node(t_env *env, char *key, char *value);
+
+t_shell		*ft_init_shell(void);
 
 /*
  *	error
@@ -288,5 +282,12 @@ void		ft_free_tree(t_tree *tree);
 void		ft_free_all(t_shell *shell);
 void		ft_free_pipex(t_pipex *pipex);
 void		ft_free_tokens(t_token *tokens);
+
+/*
+ *	DEBUG
+ */
+
+void		ft_print_all(t_shell *shell);
+void		ft_print_pipex(t_pipex *pipex);
 
 #endif

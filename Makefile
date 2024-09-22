@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: phkevin <phkevin@42luxembourg.lu>          +#+  +:+       +#+         #
+#    By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/16 09:35:29 by nfordoxc          #+#    #+#              #
-#    Updated: 2024/09/20 11:27:12 by phkevin          ###   Luxembour.lu       #
+#    Updated: 2024/09/22 18:19:10 by nfordoxc         ###   Luxembourg.lu      #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,10 +62,12 @@ MYLIBS_BONUS	=
 ################################################################################
 
 SRC				=	./src/main.c \
-					./src/ft_error.c \
-					./src/ft_builtin.c \
-					./src/ft_signal.c \
-					./src/ft_wilcard.c \
+					./src/utils/ft_error.c \
+					./src/utils/ft_signal.c \
+					./src/utils/ft_wilcard.c \
+					./src/utils/ft_check_cmd.c \
+					./src/utils/ft_struct.c \
+					./src/builtin/ft_builtin.c \
 					./src/builtin/ft_echo.c \
 					./src/builtin/ft_env.c \
 					./src/builtin/ft_env_utils.c \
@@ -75,18 +77,20 @@ SRC				=	./src/main.c \
 					./src/builtin/ft_pwd.c \
 					./src/builtin/ft_unset.c \
 					./src/builtin/ft_exit.c \
-					./src/tokennizer/ft_parse.c \
-					./src/tokennizer/ft_parse_utils.c \
-					./src/tokennizer/ft_tree.c \
-					./src/tokennizer/ft_tree_utils_0.c \
-					./src/tokennizer/ft_tree_utils_1.c \
-					./src/tokennizer/ft_free_tree_tokens.c \
-					./src/tokennizer/ft_parse_work_0.c \
-					./src/tokennizer/ft_parse_work_1.c \
+					./src/token/ft_parse.c \
+					./src/token/ft_parse_utils_0.c \
+					./src/token/ft_parse_utils_1.c \
+					./src/token/ft_parse_utils_2.c \
+					./src/tree/ft_tree.c \
+					./src/tree/ft_tree_utils_0.c \
+					./src/tree/ft_tree_utils_1.c \
+					./src/tree/ft_tree_utils_2.c \
+					./src/free/ft_free_tree_tokens.c \
 					./src/pipex/ft_pipex_utils.c \
 					./src/pipex/ft_env_to_array.c \
 					./src/pipex/ft_get_access.c \
-					./src/pipex/ft_fill_pipex.c
+					./src/pipex/ft_fill_pipex.c \
+					./src/utils/debug.c
 
 OBJ				=	$(SRC:.c=.o)
 
@@ -135,7 +139,7 @@ BWHITE			=	'\033[1;97m'
 ################################################################################
 
 CURRENT_FILE	= 	0
-NB_SRC			=	26
+NB_SRC			=	30
 SLEEP_TIME		=	0.001
 
 define delete_progress
@@ -205,8 +209,11 @@ deb:		$(LIB_LIBFT_DIR)/libft.a \
 clean:
 	$(call delete_progress, ./src/*.o)
 	$(call delete_progress, ./src/builtin/*.o)
-	$(call delete_progress, ./src/tokennizer/*.o)
+	$(call delete_progress, ./src/free/*.o)
 	$(call delete_progress, ./src/pipex/*.o)
+	$(call delete_progress, ./src/token/*.o)
+	$(call delete_progress, ./src/tree/*.o)
+	$(call delete_progress, ./src/utils/*.o)
 	@$(MAKE) -sC $(LIB_LIBFT_DIR) clean
 
 fclean: 	clean

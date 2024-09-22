@@ -6,10 +6,9 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 13:04:59 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/08/29 13:09:07 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 22/09/2024 15:28:50 by Nicostrong       ###   ########.lu       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "libft.h"
 

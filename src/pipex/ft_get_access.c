@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 15:42:23 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/20 10:53:14 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 22/09/2024 15:41:16 by Nicostrong       ###   ########.lu       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,13 @@
 static char	**ft_concat_cmd_path(char **path, char *cmd)
 {
 	char	**path_cmd_array;
-	char	**tmp;
 	char	*joined;
 	int		index;
 	int		nb_row;
 
 	index = 0;
 	nb_row = 0;
-	tmp = path;
-	while (*tmp++)
+	while (path[nb_row])
 		nb_row++;
 	path_cmd_array = (char **)ft_calloc((nb_row + 1), sizeof(char *));
 	if (!path_cmd_array)
@@ -92,13 +90,11 @@ char	*ft_concat_path_cmd(t_pipex *pipex, char *cmd)
 	while (path_tmp[index] && (access(path_tmp[index], X_OK) != 0))
 		index++;
 	if (path_tmp[index])
-	{
 		exec_path = ft_strdup(path_tmp[index]);
-		if (!exec_path)
-			return (NULL);
-	}
 	else
 		exec_path = ft_strdup(cmd);
+	if (!exec_path)
+		return (NULL);
 	ft_free_array(path_tmp);
 	return (exec_path);
 }

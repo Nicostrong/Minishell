@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:12:37 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/20 09:53:47 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 22/09/2024 15:40:53 by Nicostrong       ###   ########.lu       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void	ft_free_tokens(t_token *tokens)
 void	ft_free_tree(t_tree *tree)
 {
 	if (!tree)
-		return;
+		return ;
 	if (tree->left)
 	{
 		ft_free_tree(tree->left);
@@ -123,10 +123,10 @@ void	ft_free_tree(t_tree *tree)
 		ft_free_tree(tree->next);
 		tree->next = NULL;
 	}
-	if (tree->cmd)
+	if (tree->value)
 	{
-		free(tree->cmd);
-		tree->cmd = NULL;
+		free(tree->value);
+		tree->value = NULL;
 	}
 	if (tree)
 		free(tree);

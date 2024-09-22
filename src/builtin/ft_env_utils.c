@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 08:26:04 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/12 10:46:02 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/22 14:21:19 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,41 +127,4 @@ char	*ft_get_env_value(t_env *env, char *key)
 		current = current->next;
 	}
 	return (NULL);
-}
-
-/*
- * <cat>minishell</cat>
- *
- * <summary>
- * 	void	ft_update_shlvl(t_env **env)
- * </summary>
- *
- * <description>
- * 	ft_update_shlvl increase the value of SHLVL variable on the linked list env.
- * </description>
- *
- * <param type="t_env **" name="env">linked list env</param>
- *
- * <return>
- * 	void.
- * </return>
- *
- */
-
-void	ft_update_shlvl(t_env **env)
-{
-	char	*shlvl_value;
-	char	*new_shlvl;
-	int		shlvl;
-
-	shlvl_value = ft_get_env_value(*env, "SHLVL");
-	if (shlvl_value)
-	{
-		shlvl = ft_atoi(shlvl_value) + 1;
-		new_shlvl = ft_itoa(shlvl);
-		if (!new_shlvl)
-			return ;
-		ft_set_env_value(env, "SHLVL", new_shlvl);
-		free(new_shlvl);
-	}
 }
