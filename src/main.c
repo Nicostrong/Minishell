@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:41:47 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/22 15:25:36 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/23 09:40:25 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,28 +79,30 @@ int main(int argc, char **argv, char **envp)
 		free(data.cmd);
 		free(data.var_parse);
 	}
-}*/
+}
+
+//command = "(echo $USER && echo $HOME) | /bin/cat < input | /usr/bin/grep \"toto\" | /bin/wc -l >> out";
+//command = "/bin/cat < input | /usr/bin/grep \"toto\" | /bin/wc -l >> out";
+//command = "<< EOF /bin/cat | wc -l > out";
+//command = "(echo \"Hello $USER\" && /bin/cat < input.txt | /bin/grep -i \"pattern\" || echo 'No match found') | /bin/ls -la | /bin/wc -l >> count.log && /bin/tail -f output.log";
+*/
 
 int	main(void)
 {
 	char	*command;
 	t_shell	*shell;
 
-	//command = "(echo $USER && echo $HOME) | /bin/cat < input | /usr/bin/grep \"toto\" | /bin/wc -l >> out";
-	command = "/bin/cat < input | /usr/bin/grep \"toto\" | /bin/wc -l >> out";
-	//command = "<< EOF /bin/cat | wc -l > out";
-	//command = "(echo \"$USER\" && /bin/cd ~/projects && ls -la * | /bin/grep \"./*.c$\") | /bin/wc -l >> output.txt 2>&1";
-	//command = "(echo \"Hello $USER\" && /bin/cat < input.txt | /bin/grep -i \"pattern\" || echo 'No match found') | /bin/ls -la | /bin/wc -l >> count.log && /bin/tail -f output.log";
 	shell = ft_init_shell();
 	signal(SIGINT, handle_signal);
 	signal(SIGQUIT, SIG_IGN);
-	while (g_status != -1)
+	while (1)
 	{
 		command = readline(TERM_NAME);
 		if (!command)
 		{
-			// rl_clear_history();	// for linux
-			clear_history();		// for Mac
+			printf("exit¦n");
+			rl_clear_history();	// for linux
+			// clear_history();		// for Mac
 			ft_free_all(shell);
 			exit (EXIT_SUCCESS);
 		}
@@ -117,9 +119,10 @@ int	main(void)
 				if (ft_strequal(command, "exit"))
 				{
 					printf("exit\n");
-					// rl_clear_history();	// for linux
-					clear_history();		// for Mac
+					rl_clear_history();	// for linux
+					// clear_history();		// for Mac
 					ft_free_all(shell);
+					free(command);
 					exit (EXIT_SUCCESS);
 				}
 				ft_free_tokens(shell->l_token);

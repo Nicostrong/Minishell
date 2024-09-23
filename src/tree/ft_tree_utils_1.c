@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 15:56:16 by phkevin           #+#    #+#             */
-/*   Updated: 2024/09/22 18:14:18 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/23 11:16:53 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_tree	*ft_handle_pipe_or_and(t_token **cur, t_tree **head)
  * <cat>minishell</cat>
  *
  * <summary>
- *	void	ft_handle_file(t_token **cur, t_tree **parent)
+ *	void	ft_handle_file(t_token **cur, t_tree **head, t_tree **parent)
  * </summary>
  *
  * <description>
@@ -61,6 +61,7 @@ t_tree	*ft_handle_pipe_or_and(t_token **cur, t_tree **head)
  * </description>
  *
  * <param type="t_token **" name="cur">current token</param>
+ * <param type="t_tree **" name="head">head of the tree</param>
  * <param type="t_tree **" name="parent">parent node of this node</param>
  *
  * <return>
@@ -69,7 +70,7 @@ t_tree	*ft_handle_pipe_or_and(t_token **cur, t_tree **head)
  *
  */
 
-void	ft_handle_file(t_token **cur, t_tree **parent)
+void	ft_handle_file(t_token **cur, t_tree **head, t_tree **parent)
 {
 	t_tree	*new_node;
 
@@ -80,13 +81,11 @@ void	ft_handle_file(t_token **cur, t_tree **parent)
 		new_node->next = ft_create_node_tree((*cur)->type, (*cur)->value);
 		*cur = (*cur)->next;
 	}
-	if (*parent && (*parent)->type >= T_WORD && (*parent)->type <= T_CMD)
-	{
-		(*parent)->next = new_node;
-		*parent = new_node;
-	}
+	if (!*head)
+		*head = new_node;
 	else
-		*parent = new_node;
+		(*parent)->next = new_node;
+	*parent = new_node->next;
 }
 
 /*

@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:46:06 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/22 17:59:54 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/23 11:19:41 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ t_token		*ft_parse_cmd(char *input, t_shell *shell);
  */
 
 void		ft_handle_var(t_token **cur, t_tree **parent);
-void		ft_handle_file(t_token **cur, t_tree **parent);
+void		ft_handle_file(t_token **cur, t_tree **head, t_tree **parent);
 void		ft_handle_quote(t_token **cur, t_tree **parent);
 void		ft_handle_option(t_token **cur, t_tree **parent);
 void		ft_handle_cmd(t_token **cur, t_tree **head, t_tree **parent);

@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:59:20 by nfordoxc          #+#    #+#             */
-/*   Updated: 2024/09/22 18:41:16 by nfordoxc         ###   Luxembourg.lu     */
+/*   Updated: 2024/09/23 11:17:36 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 static void	ft_parse_ttt_2(t_token **cur, t_tree **head, t_tree **parent)
 {
 	if ((*cur)->type >= T_F_IN && (*cur)->type <= T_F_OUT_APPEND)
-		ft_handle_file(cur, parent);
+		ft_handle_file(cur, head, parent);
 	else if ((*cur)->type >= T_WORD && (*cur)->type <= T_CMD)
 		ft_handle_cmd(cur, head, parent);
 	else if ((*cur)->type == T_VAR)

@@ -6,7 +6,7 @@
 /*   By: nfordoxc <nfordoxc@42luxembourg.lu>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:12:37 by nfordoxc          #+#    #+#             */
-/*   Updated: 22/09/2024 15:40:53 by Nicostrong       ###   ########.lu       */
+/*   Updated: 2024/09/23 09:04:11 by nfordoxc         ###   Luxembourg.lu     */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,21 +108,9 @@ void	ft_free_tree(t_tree *tree)
 {
 	if (!tree)
 		return ;
-	if (tree->left)
-	{
-		ft_free_tree(tree->left);
-		tree->left = NULL;
-	}
-	if (tree->right)
-	{
-		ft_free_tree(tree->right);
-		tree->right = NULL;
-	}
-	if (tree->next)
-	{
-		ft_free_tree(tree->next);
-		tree->next = NULL;
-	}
+	ft_free_tree(tree->left);
+	ft_free_tree(tree->right);
+	ft_free_tree(tree->next);
 	if (tree->value)
 	{
 		free(tree->value);
